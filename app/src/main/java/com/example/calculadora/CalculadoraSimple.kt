@@ -1,12 +1,160 @@
 package com.example.calculadora
 
 import android.os.Bundle
+import android.widget.Button
 import androidx.appcompat.app.AppCompatActivity
+import com.example.calculadora.databinding.CalculadoraSimpleBinding
 
 class CalculadoraSimple : AppCompatActivity() {
+
+    private lateinit var binding: CalculadoraSimpleBinding
+    private val lista = ArrayList<String>()
+    private lateinit var myButtons: Map<Button, String>
+
+
+    // Ciclo de vida: Inicialización
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.calculadora_simple)
+        binding = CalculadoraSimpleBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+        initComponent()
+        initListeners()
+    }
 
+    private fun initComponent(){
+        myButtons = mapOf(
+            binding.number0 to "0",
+            binding.number1 to "1",
+            binding.number2 to "2",
+            binding.number3 to "3",
+            binding.number4 to "4",
+            binding.number5 to "5",
+            binding.number6 to "6",
+            binding.number7 to "7",
+            binding.number8 to "8",
+            binding.number9 to "9",
+            binding.plusButton to "+",
+            binding.minusButton to "-",
+            binding.multiplyButton to "x",
+            binding.divideButton to "/",
+            binding.dotButton to "."
+        )
+    }
+
+    // Configuración de listeners
+    private fun initListeners() {
+        myButtons.forEach { (button, value) ->
+            button.setOnClickListener {
+                lista.add(value)
+                binding.mainEditText.append(value)
+            }
+        }
+
+        binding.equalsButton.setOnClickListener {
+            resultado()
+        }
+
+        binding.cleanAllButton.setOnClickListener {
+            lista.clear()
+            binding.mainEditText.setText("")
+        }
+
+        binding.deleteButton.setOnClickListener {
+            deleteLast()
+        }
+    }
+
+    // Métodos de interacción del usuario
+    private fun resultado() {
+        if (lista.isEmpty() || lista.last() in setOf("+", "-", "x", "/")) {
+            binding.mainEditText.setText("Error")
+            return
+        }
+
+        val resultado = calculo(lista)
+        binding.mainEditText.setText(resultado.toString())
+    }
+
+    private fun deleteLast() {
+        if (lista.isNotEmpty()) {
+            lista.removeAt(lista.size - 1)
+            binding.mainEditText.setText(lista.joinToString(""))
+        }
+    }
+
+    // Métodos de lógica principal del cálculo
+    private fun calculo(lista: ArrayList<String>): Double {
+        val operators = setOf("+", "-", "x", "/")
+        val numbers = mutableListOf<Double>()
+        val operations = mutableListOf<String>()
+
+        parseInput(lista, operators, numbers, operations)
+        validateExpression(numbers, operations)
+        performOperations(numbers, operations, setOf("x", "/"))
+        performOperations(numbers, operations, setOf("+", "-"))
+
+        return roundIfDivision(numbers[0], lista, operators)
+    }
+
+    private fun parseInput(
+        lista: ArrayList<String>,
+        operators: Set<String>,
+        numbers: MutableList<Double>,
+        operations: MutableList<String>
+    ) {
+        var number = ""
+        for (item in lista) {
+            if (item in operators) {
+                if (number.isNotEmpty()) {
+                    numbers.add(number.toDouble())
+                    number = ""
+                }
+                operations.add(item)
+            } else {
+                number += item
+            }
+        }
+        if (number.isNotEmpty()) {
+            numbers.add(number.toDouble())
+        }
+    }
+
+    private fun validateExpression(numbers: List<Double>, operations: List<String>) {
+        if (numbers.size - 1 != operations.size) {
+            throw IllegalArgumentException("La expresión no es válida.")
+        }
+    }
+
+    private fun performOperations(
+        numbers: MutableList<Double>,
+        operations: MutableList<String>,
+        targetOperations: Set<String>
+    ) {
+        var i = 0
+        while (i < operations.size) {
+            if (operations[i] in targetOperations) {
+                val result = when (operations[i]) {
+                    "x" -> numbers[i] * numbers[i + 1]
+                    "/" -> numbers[i] / numbers[i + 1]
+                    "+" -> numbers[i] + numbers[i + 1]
+                    "-" -> numbers[i] - numbers[i + 1]
+                    else -> throw IllegalArgumentException("Operación no válida.")
+                }
+                numbers[i] = result
+                numbers.removeAt(i + 1)
+                operations.removeAt(i)
+            } else {
+                i++
+            }
+        }
+    }
+
+    private fun roundIfDivision(result: Double, lista: ArrayList<String>, operators: Set<String>): Double {
+        val lastOperation = lista.lastOrNull { it in operators }
+        return if (lastOperation == "/") {
+            Math.round(result * 1000.0) / 1000.0
+        } else {
+            result
+        }
     }
 }
