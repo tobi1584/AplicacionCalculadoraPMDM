@@ -1,5 +1,6 @@
 package com.example.calculadora
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
@@ -66,6 +67,11 @@ class CalculadoraSimple : AppCompatActivity() {
 
         binding.percentButton.setOnClickListener {
             calculatePercentage()
+        }
+
+        binding.switchComplexButton.setOnClickListener {
+            val intent = Intent(this, CalculadoraCompleja::class.java)
+            startActivity(intent)
         }
     }
 
