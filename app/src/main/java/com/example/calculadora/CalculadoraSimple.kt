@@ -2,6 +2,7 @@ package com.example.calculadora
 
 import android.os.Bundle
 import android.widget.Button
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.calculadora.databinding.CalculadoraSimpleBinding
 
@@ -62,16 +63,22 @@ class CalculadoraSimple : AppCompatActivity() {
         binding.deleteButton.setOnClickListener {
             deleteLast()
         }
+
+        binding.percentButton.setOnClickListener {
+            calculatePercentage()
+        }
     }
 
     // Métodos de interacción del usuario
     private fun resultado() {
         if (lista.isEmpty() || lista.last() in setOf("+", "-", "x", "/")) {
-            binding.mainEditText.setText("Error")
+            Toast.makeText(this, "Se ha producido un error", Toast.LENGTH_LONG).show()
             return
         }
 
         val resultado = calculo(lista)
+        lista.clear()
+        lista.add(resultado.toString())
         binding.mainEditText.setText(resultado.toString())
     }
 
@@ -79,6 +86,18 @@ class CalculadoraSimple : AppCompatActivity() {
         if (lista.isNotEmpty()) {
             lista.removeAt(lista.size - 1)
             binding.mainEditText.setText(lista.joinToString(""))
+        }
+    }
+
+    private fun calculatePercentage() {
+        if (lista.isNotEmpty() && lista.last().toDoubleOrNull() != null) {
+            val number = lista.joinToString("").toDouble()
+            val percentage = number / 100
+            lista.clear()
+            lista.add(percentage.toString())
+            binding.mainEditText.setText(percentage.toString())
+        } else {
+            Toast.makeText(this, "No se puede calcular el porcentaje", Toast.LENGTH_LONG).show()
         }
     }
 
@@ -121,7 +140,7 @@ class CalculadoraSimple : AppCompatActivity() {
 
     private fun validateExpression(numbers: List<Double>, operations: List<String>) {
         if (numbers.size - 1 != operations.size) {
-            throw IllegalArgumentException("La expresión no es válida.")
+            Toast.makeText(this, "La expresión no es válida", Toast.LENGTH_LONG).show()
         }
     }
 
