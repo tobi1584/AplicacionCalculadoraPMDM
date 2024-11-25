@@ -62,7 +62,6 @@ android:background="@color/backGroundColor">
     android:layout_width="359dp"
     android:layout_height="84dp"
     android:gravity="end"
-    android:text="@string/number_0"
     android:textSize="60sp"
     app:layout_constraintBottom_toTopOf="@+id/linearLayout"
     app:layout_constraintEnd_toEndOf="parent"
