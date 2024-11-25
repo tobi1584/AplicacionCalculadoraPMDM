@@ -1,23 +1,31 @@
 package com.example.calculadora
 
+import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.calculadora.databinding.CalculadoraSimpleBinding
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class CalculadoraSimple : AppCompatActivity() {
 
     private lateinit var binding: CalculadoraSimpleBinding
     private val lista = ArrayList<String>()
     private lateinit var myButtons: Map<Button, String>
+    // nueva configuración para base de datos
+    private lateinit var dbHelper: SQLite
+
 
 
     // Ciclo de vida: Inicialización
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = CalculadoraSimpleBinding.inflate(layoutInflater)
+        dbHelper = SQLite(this, "CalculadoraDB", null, 1)
         setContentView(binding.root)
         initComponent()
         initListeners()
@@ -81,6 +89,14 @@ class CalculadoraSimple : AppCompatActivity() {
             Toast.makeText(this, "Se ha producido un error", Toast.LENGTH_LONG).show()
             return
         }
+
+        val db = dbHelper.writableDatabase
+        val values = ContentValues().apply {
+            put("operacion", binding.mainEditText.text.toString())
+            put("fecha", SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date()))
+        }
+        db.insert("historial", null, values)
+        db.close()
 
         val resultado = calculo(lista)
         lista.clear()
