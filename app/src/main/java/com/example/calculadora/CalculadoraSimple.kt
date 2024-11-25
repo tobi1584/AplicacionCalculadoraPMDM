@@ -12,9 +12,8 @@ class CalculadoraSimple : AppCompatActivity() {
     private lateinit var binding: CalculadoraSimpleBinding
     private val lista = ArrayList<String>()
     private lateinit var myButtons: Map<Button, String>
+    private var resultadoCalculado = false
 
-
-    // Ciclo de vida: Inicialización
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = CalculadoraSimpleBinding.inflate(layoutInflater)
@@ -23,7 +22,7 @@ class CalculadoraSimple : AppCompatActivity() {
         initListeners()
     }
 
-    private fun initComponent(){
+    private fun initComponent() {
         myButtons = mapOf(
             binding.number0 to "0",
             binding.number1 to "1",
@@ -43,12 +42,23 @@ class CalculadoraSimple : AppCompatActivity() {
         )
     }
 
-    // Configuración de listeners
     private fun initListeners() {
         myButtons.forEach { (button, value) ->
             button.setOnClickListener {
-                lista.add(value)
-                binding.mainEditText.append(value)
+                if (resultadoCalculado) {
+                    if (value in setOf("+", "-", "x", "/")) {
+                        lista.add(value)
+                        binding.mainEditText.append(value)
+                    } else {
+                        lista.clear()
+                        binding.mainEditText.setText(value)
+                        lista.add(value)
+                    }
+                    resultadoCalculado = false
+                } else {
+                    lista.add(value)
+                    binding.mainEditText.append(value)
+                }
             }
         }
 
@@ -75,7 +85,6 @@ class CalculadoraSimple : AppCompatActivity() {
         }
     }
 
-    // Métodos de interacción del usuario
     private fun resultado() {
         if (lista.isEmpty() || lista.last() in setOf("+", "-", "x", "/")) {
             Toast.makeText(this, "Se ha producido un error", Toast.LENGTH_LONG).show()
@@ -85,7 +94,17 @@ class CalculadoraSimple : AppCompatActivity() {
         val resultado = calculo(lista)
         lista.clear()
         lista.add(resultado.toString())
-        binding.mainEditText.setText(resultado.toString())
+
+        val resultadoFinal: String
+
+        if (resultado % 1 == 0.0) {
+            resultadoFinal = resultado.toInt().toString()
+        } else {
+            resultadoFinal = resultado.toString()
+        }
+
+        binding.mainEditText.setText(resultadoFinal)
+        resultadoCalculado = true
     }
 
     private fun deleteLast() {
@@ -107,7 +126,6 @@ class CalculadoraSimple : AppCompatActivity() {
         }
     }
 
-    // Métodos de lógica principal del cálculo
     private fun calculo(lista: ArrayList<String>): Double {
         val operators = setOf("+", "-", "x", "/")
         val numbers = mutableListOf<Double>()
