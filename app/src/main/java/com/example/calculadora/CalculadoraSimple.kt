@@ -146,19 +146,27 @@ class CalculadoraSimple : AppCompatActivity() {
         operations: MutableList<String>
     ) {
         var number = ""
+        var isNegative = false
+
         for (item in lista) {
             if (item in operators) {
-                if (number.isNotEmpty()) {
-                    numbers.add(number.toDouble())
-                    number = ""
+                if (item == "-" && (number.isEmpty() || operations.isNotEmpty() && operations.last() in operators)) {
+                    isNegative = true
+                } else {
+                    if (number.isNotEmpty()) {
+                        numbers.add(if (isNegative) -number.toDouble() else number.toDouble())
+                        number = ""
+                        isNegative = false
+                    }
+                    operations.add(item)
                 }
-                operations.add(item)
             } else {
                 number += item
             }
         }
+
         if (number.isNotEmpty()) {
-            numbers.add(number.toDouble())
+            numbers.add(if (isNegative) -number.toDouble() else number.toDouble())
         }
     }
 
