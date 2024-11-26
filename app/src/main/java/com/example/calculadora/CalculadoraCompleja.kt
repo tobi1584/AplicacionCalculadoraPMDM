@@ -45,7 +45,8 @@ class CalculadoraCompleja : AppCompatActivity() {
             binding.multiplyButton to "x",
             binding.divideButton to "/",
             binding.dotButton to ".",
-            binding.piButton to "\u03C0"
+            binding.piButton to "\u03C0",
+            binding.eulerButton to "e"
         )
     }
 
@@ -61,6 +62,9 @@ class CalculadoraCompleja : AppCompatActivity() {
                         if (value == "\u03C0") {
                             binding.editText.setText(Math.PI.toString())
                             lista.add(Math.PI.toString())
+                        } else if (value == "e") {
+                            binding.editText.setText("e")
+                            lista.add(Math.E.toString())
                         } else {
                             binding.editText.setText(value)
                             lista.add(value)
@@ -72,6 +76,10 @@ class CalculadoraCompleja : AppCompatActivity() {
                         val piValue = Math.PI
                         lista.add(piValue.toString())
                         binding.editText.append("\u03C0")
+                    } else if (value == "e") {
+                        val eValue = Math.E
+                        lista.add(eValue.toString())
+                        binding.editText.append("e")
                     } else {
                         lista.add(value)
                         binding.editText.append(value)
@@ -79,6 +87,7 @@ class CalculadoraCompleja : AppCompatActivity() {
                 }
             }
         }
+
 
         binding.equalsButton.setOnClickListener {
             resultado()
