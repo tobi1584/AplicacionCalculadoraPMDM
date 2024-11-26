@@ -1,44 +1,51 @@
 package com.example.calculadora
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import com.example.calculadora.databinding.CalculadoraComplejaBinding
 import com.example.calculadora.databinding.CalculadoraSimpleBinding
+import kotlin.math.roundToInt
 
-class CalculadoraSimple : AppCompatActivity() {
+class CalculadoraCompleja : AppCompatActivity() {
 
-    private lateinit var binding: CalculadoraSimpleBinding
+    private lateinit var binding: CalculadoraComplejaBinding
     private val lista = ArrayList<String>()
     private lateinit var myButtons: Map<Button, String>
     private var resultadoCalculado = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = CalculadoraSimpleBinding.inflate(layoutInflater)
+        binding = CalculadoraComplejaBinding.inflate(layoutInflater)
         setContentView(binding.root)
         initComponent()
         initListeners()
     }
-
     private fun initComponent() {
         myButtons = mapOf(
-            binding.number0 to "0",
-            binding.number1 to "1",
-            binding.number2 to "2",
-            binding.number3 to "3",
-            binding.number4 to "4",
-            binding.number5 to "5",
-            binding.number6 to "6",
-            binding.number7 to "7",
-            binding.number8 to "8",
-            binding.number9 to "9",
+            binding.number0Button to "0",
+            binding.number1Button to "1",
+            binding.number2Button to "2",
+            binding.number3Button to "3",
+            binding.number4Button to "4",
+            binding.number5Button to "5",
+            binding.number6Button to "6",
+            binding.number7Button to "7",
+            binding.number8Button to "8",
+            binding.number9Button to "9",
             binding.plusButton to "+",
             binding.minusButton to "-",
             binding.multiplyButton to "x",
             binding.divideButton to "/",
-            binding.dotButton to "."
+            binding.dotButton to ".",
+            binding.piButton to "\u03C0"
         )
     }
 
@@ -48,16 +55,27 @@ class CalculadoraSimple : AppCompatActivity() {
                 if (resultadoCalculado) {
                     if (value in setOf("+", "-", "x", "/")) {
                         lista.add(value)
-                        binding.mainEditText.append(value)
+                        binding.editText.append(value)
                     } else {
                         lista.clear()
-                        binding.mainEditText.setText(value)
-                        lista.add(value)
+                        if (value == "\u03C0") {
+                            binding.editText.setText(Math.PI.toString())
+                            lista.add(Math.PI.toString())
+                        } else {
+                            binding.editText.setText(value)
+                            lista.add(value)
+                        }
                     }
                     resultadoCalculado = false
                 } else {
-                    lista.add(value)
-                    binding.mainEditText.append(value)
+                    if (value == "\u03C0") {
+                        val piValue = Math.PI
+                        lista.add(piValue.toString())
+                        binding.editText.append("\u03C0")
+                    } else {
+                        lista.add(value)
+                        binding.editText.append(value)
+                    }
                 }
             }
         }
@@ -68,7 +86,7 @@ class CalculadoraSimple : AppCompatActivity() {
 
         binding.cleanAllButton.setOnClickListener {
             lista.clear()
-            binding.mainEditText.setText("")
+            binding.editText.setText("")
         }
 
         binding.deleteButton.setOnClickListener {
@@ -79,8 +97,8 @@ class CalculadoraSimple : AppCompatActivity() {
             calculatePercentage()
         }
 
-        binding.switchComplexButton.setOnClickListener {
-            val intent = Intent(this, CalculadoraCompleja::class.java)
+        binding.switchSimpleButton.setOnClickListener {
+            val intent = Intent(this, CalculadoraSimple::class.java)
             startActivity(intent)
         }
     }
@@ -103,14 +121,14 @@ class CalculadoraSimple : AppCompatActivity() {
             resultadoFinal = resultado.toString()
         }
 
-        binding.mainEditText.setText(resultadoFinal)
+        binding.editText.setText(resultadoFinal)
         resultadoCalculado = true
     }
 
     private fun deleteLast() {
         if (lista.isNotEmpty()) {
             lista.removeAt(lista.size - 1)
-            binding.mainEditText.setText(lista.joinToString(""))
+            binding.editText.setText(lista.joinToString(""))
         }
     }
 
@@ -120,7 +138,7 @@ class CalculadoraSimple : AppCompatActivity() {
             val percentage = number / 100
             lista.clear()
             lista.add(percentage.toString())
-            binding.mainEditText.setText(percentage.toString())
+            binding.editText.setText(percentage.toString())
         } else {
             Toast.makeText(this, "No se puede calcular el porcentaje", Toast.LENGTH_LONG).show()
         }
@@ -208,4 +226,6 @@ class CalculadoraSimple : AppCompatActivity() {
             result
         }
     }
+
+
 }

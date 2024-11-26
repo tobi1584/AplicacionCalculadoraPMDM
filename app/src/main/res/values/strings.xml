@@ -19,4 +19,30 @@
     <string name="percent">%</string>
     <string name="all_clean">AC</string>
     <string name="delete">del</string>
+
+
+    <!-- Compleja -->
+    <string name="second">2nd</string>
+    <string name="deg">deg</string>
+    <string name="rad">rad</string>
+    <string name="sin">sin</string>
+    <string name="cos">cos</string>
+    <string name="tan">tan</string>
+
+    <string name="x_raised_y">x^y</string>
+    <string name="lg">lg</string>
+    <string name="ln">ln</string>
+    <string name="parent_open">(</string>
+    <string name="parent_close">)</string>
+
+    <string name="square_root">√x</string>
+
+    <string name="factorial">x!</string>
+
+    <string name="func_reci">1/x</string>
+
+    <string name="pi">π</string>
+
+    <string name="euler">e</string>
+
 </resources>
