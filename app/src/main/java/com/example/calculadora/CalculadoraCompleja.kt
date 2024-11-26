@@ -1,18 +1,12 @@
 package com.example.calculadora
 
-import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
+import android.text.Editable
 import android.widget.Button
 import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
 import com.example.calculadora.databinding.CalculadoraComplejaBinding
-import com.example.calculadora.databinding.CalculadoraSimpleBinding
-import kotlin.math.roundToInt
 
 class CalculadoraCompleja : AppCompatActivity() {
 
@@ -110,6 +104,28 @@ class CalculadoraCompleja : AppCompatActivity() {
             val intent = Intent(this, CalculadoraSimple::class.java)
             startActivity(intent)
         }
+
+        binding.factorialButton.setOnClickListener{
+            val texto = binding.editText.text;
+            calcularFactorial(texto)
+        }
+    }
+
+    private fun calcularFactorial(texto: Editable) {
+        val num = texto.toString().trim().toIntOrNull()
+        if (num != null && num > 0) {
+            val fact = factorial(num)
+            lista.add(fact.toString())
+            binding.editText.setText(fact.toString())
+        } else {
+            Toast.makeText(this, "Entrada no válida", Toast.LENGTH_LONG).show()
+            lista.clear()
+            binding.editText.setText("")
+        }
+    }
+
+    private fun factorial(n: Int): Int {
+        return if (n == 0) 1 else n * factorial(n - 1)
     }
 
     private fun resultado() {
