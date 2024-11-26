@@ -60,8 +60,8 @@ android:background="@color/backGroundColor">
 <EditText
     android:id="@+id/editText"
     android:layout_width="359dp"
-    android:layout_height="84dp"
-    android:gravity="end"
+    android:layout_height="250dp"
+    android:gravity="bottom|end"
     android:textSize="60sp"
     app:layout_constraintBottom_toTopOf="@+id/linearLayout"
     app:layout_constraintEnd_toEndOf="parent"

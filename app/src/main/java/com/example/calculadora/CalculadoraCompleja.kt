@@ -1,7 +1,9 @@
 package com.example.calculadora
 
+import android.content.ContentValues.TAG
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Button
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -10,6 +12,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.example.calculadora.databinding.CalculadoraComplejaBinding
 import com.example.calculadora.databinding.CalculadoraSimpleBinding
+import kotlin.math.roundToInt
 
 class CalculadoraCompleja : AppCompatActivity() {
 
@@ -41,7 +44,8 @@ class CalculadoraCompleja : AppCompatActivity() {
             binding.minusButton to "-",
             binding.multiplyButton to "x",
             binding.divideButton to "/",
-            binding.dotButton to "."
+            binding.dotButton to ".",
+            binding.piButton to "\u03C0"
         )
     }
 
@@ -54,13 +58,24 @@ class CalculadoraCompleja : AppCompatActivity() {
                         binding.editText.append(value)
                     } else {
                         lista.clear()
-                        binding.editText.setText(value)
-                        lista.add(value)
+                        if (value == "\u03C0") {
+                            binding.editText.setText(Math.PI.toString())
+                            lista.add(Math.PI.toString())
+                        } else {
+                            binding.editText.setText(value)
+                            lista.add(value)
+                        }
                     }
                     resultadoCalculado = false
                 } else {
-                    lista.add(value)
-                    binding.editText.append(value)
+                    if (value == "\u03C0") {
+                        val piValue = Math.PI
+                        lista.add(piValue.toString())
+                        binding.editText.append("\u03C0")
+                    } else {
+                        lista.add(value)
+                        binding.editText.append(value)
+                    }
                 }
             }
         }
