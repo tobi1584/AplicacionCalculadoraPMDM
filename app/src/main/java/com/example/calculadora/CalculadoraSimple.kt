@@ -1,11 +1,16 @@
 package com.example.calculadora
 
+import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Button
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.calculadora.databinding.CalculadoraSimpleBinding
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class CalculadoraSimple : AppCompatActivity() {
 
@@ -13,13 +18,27 @@ class CalculadoraSimple : AppCompatActivity() {
     private val lista = ArrayList<String>()
     private lateinit var myButtons: Map<Button, String>
     private var resultadoCalculado = false
+    private lateinit var dbHelper: SQLite
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = CalculadoraSimpleBinding.inflate(layoutInflater)
+        dbHelper = SQLite(this, "CalculadoraDB", null, 1)
         setContentView(binding.root)
         initComponent()
         initListeners()
+
+        // Inicializar la base de datos y realizar una operación de lectura
+        val db = dbHelper.readableDatabase
+        db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null).use { cursor ->
+            if (cursor.moveToFirst()) {
+                do {
+                    val tableName = cursor.getString(0)
+                    println("Table: $tableName")
+                } while (cursor.moveToNext())
+            }
+        }
+        db.close()
     }
 
     private fun initComponent() {
@@ -83,8 +102,31 @@ class CalculadoraSimple : AppCompatActivity() {
             val intent = Intent(this, CalculadoraCompleja::class.java)
             startActivity(intent)
         }
+
+        binding.othersImageButton.setOnClickListener {
+            val popupMenu = PopupMenu(this, it)
+            popupMenu.menu.add(0, 1, 0, "Historial")
+            popupMenu.menu.add(0, 2, 1, "Magnitudes")
+            popupMenu.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    1 -> {
+                        // Acción para Historial
+                        Toast.makeText(this, "Historial seleccionado", Toast.LENGTH_SHORT).show()
+                        true
+                    }
+                    2 -> {
+                        // Acción para Magnitudes
+                        Toast.makeText(this, "Magnitudes seleccionadas", Toast.LENGTH_SHORT).show()
+                        true
+                    }
+                    else -> false
+                }
+            }
+            popupMenu.show()
+        }
     }
 
+    // Métodos de interacción del usuario
     private fun resultado() {
         if (lista.isEmpty() || lista.last() in setOf("+", "-", "x", "/")) {
             Toast.makeText(this, "Se ha producido un error", Toast.LENGTH_LONG).show()
@@ -92,6 +134,16 @@ class CalculadoraSimple : AppCompatActivity() {
         }
 
         val resultado = calculo(lista)
+
+        val db = dbHelper.writableDatabase
+        val values = ContentValues().apply {
+            put("operacion", binding.mainEditText.text.toString())
+            put("fecha", SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date()))
+            put("resultado", resultado.toString())
+        }
+        db.insert("historial", null, values)
+        db.close()
+
         lista.clear()
         lista.add(resultado.toString())
 
@@ -126,6 +178,7 @@ class CalculadoraSimple : AppCompatActivity() {
         }
     }
 
+    // Métodos de lógica principal del cálculo
     private fun calculo(lista: ArrayList<String>): Double {
         val operators = setOf("+", "-", "x", "/")
         val numbers = mutableListOf<Double>()
