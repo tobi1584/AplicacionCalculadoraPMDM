@@ -20,7 +20,6 @@
     <string name="all_clean">AC</string>
     <string name="delete">del</string>
 
-
     <!-- Compleja -->
     <string name="second">2nd</string>
     <string name="deg">deg</string>
@@ -44,5 +43,20 @@
     <string name="pi">π</string>
 
     <string name="euler">e</string>
+    <string name="magnitudes">Magnitudes</string>
+
+    <!-- Convertidores -->
+    <string name="divisas">Divisas</string>
+    <string name="longitud">Longitud</string>
+    <string name="masa">Masa</string>
+    <string name="area">Área</string>
+    <string name="tiempo">Tiempo</string>
+    <string name="datos">4</string>
+    <string name="descuento">5</string>
+    <string name="volumen">6</string>
+    <string name="sistema_numeral">7</string>
+    <string name="velocidad">8</string>
+    <string name="temperatura">9</string>
+
 
 </resources>

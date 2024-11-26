@@ -17,7 +17,7 @@
             android:id="@+id/magnitudTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Magnitudes"
+            android:text="@string/magnitudes"
             android:textSize="22sp"
             android:textStyle="bold">
         </TextView>
