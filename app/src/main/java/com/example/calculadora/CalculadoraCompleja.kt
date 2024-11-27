@@ -105,11 +105,26 @@ class CalculadoraCompleja : AppCompatActivity() {
             startActivity(intent)
         }
 
-        binding.factorialButton.setOnClickListener{
+        binding.factorialButton.setOnClickListener {
             val texto = binding.editText.text;
             calcularFactorial(texto)
         }
+
+
+        binding.funcReciButton.setOnClickListener {
+            val lastValue = lista.lastOrNull()?.toDoubleOrNull()
+            if (lastValue != null && lastValue != 0.0) {
+                val result = 1 / lastValue
+                lista[lista.size - 1] = result.toString()
+                binding.editText.append("^(-1)")
+            } else {
+                Toast.makeText(this, "Entrada no válida o división por cero", Toast.LENGTH_LONG).show()
+            }
+        }
     }
+
+
+
 
     private fun calcularFactorial(texto: Editable) {
         val num = texto.toString().trim().toIntOrNull()
