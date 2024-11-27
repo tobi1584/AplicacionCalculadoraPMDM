@@ -1,12 +1,19 @@
 package com.example.calculadora
 
+import android.R
+import android.app.AlertDialog
 import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
+import android.view.Gravity
+import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.ListView
 import android.widget.PopupMenu
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.marginTop
 import com.example.calculadora.databinding.CalculadoraSimpleBinding
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -111,6 +118,7 @@ class CalculadoraSimple : AppCompatActivity() {
                 when (menuItem.itemId) {
                     1 -> {
                         // Acción para Historial
+                        mostrarHistorial()
                         Toast.makeText(this, "Historial seleccionado", Toast.LENGTH_SHORT).show()
                         true
                     }
@@ -126,6 +134,54 @@ class CalculadoraSimple : AppCompatActivity() {
         }
     }
 
+    private fun mostrarHistorial() {
+        val db = dbHelper.readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM historial", null)
+        val registros = ArrayList<String>()
+
+        if (cursor.moveToFirst()) {
+            do {
+                val operacion = cursor.getString(cursor.getColumnIndexOrThrow("operacion"))
+                val resultado = cursor.getString(cursor.getColumnIndexOrThrow("resultado"))
+                val fecha = cursor.getString(cursor.getColumnIndexOrThrow("fecha"))
+                registros.add("\n$fecha \n $operacion = $resultado \n")
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Historial")
+
+        if (registros.isEmpty()) {
+            val textView = TextView(this)
+            textView.text = "No hay registros todavía"
+            textView.textSize = 20f
+            textView.gravity = Gravity.CENTER
+            textView.height = 200
+            builder.setView(textView)
+        } else {
+            val listView = ListView(this)
+            val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, registros)
+            listView.adapter = adapter
+            builder.setView(listView)
+        }
+
+        builder.setPositiveButton("Cerrar") { dialog, _ -> dialog.dismiss() }
+        builder.setNegativeButton("Borrar Historial") { dialog, _ ->
+            borrarHistorial()
+            dialog.dismiss()
+        }
+        builder.create().show()
+    }
+
+    private fun borrarHistorial() {
+        val db = dbHelper.writableDatabase
+        db.delete("historial", null, null)
+        db.close()
+        Toast.makeText(this, "Historial borrado", Toast.LENGTH_SHORT).show()
+    }
+
     // Métodos de interacción del usuario
     private fun resultado() {
         if (lista.isEmpty() || lista.last() in setOf("+", "-", "x", "/")) {
@@ -138,7 +194,7 @@ class CalculadoraSimple : AppCompatActivity() {
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
             put("operacion", binding.mainEditText.text.toString())
-            put("fecha", SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date()))
+            put("fecha", SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date()))
             put("resultado", resultado.toString())
         }
         db.insert("historial", null, values)
@@ -158,6 +214,7 @@ class CalculadoraSimple : AppCompatActivity() {
         binding.mainEditText.setText(resultadoFinal)
         resultadoCalculado = true
     }
+
 
     private fun deleteLast() {
         if (lista.isNotEmpty()) {
