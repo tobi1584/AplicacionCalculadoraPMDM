@@ -7,6 +7,7 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.calculadora.databinding.CalculadoraComplejaBinding
+import kotlin.math.sqrt
 
 class CalculadoraCompleja : AppCompatActivity() {
 
@@ -118,8 +119,28 @@ class CalculadoraCompleja : AppCompatActivity() {
                 Toast.makeText(this, "Error: Entrada inválida", Toast.LENGTH_LONG).show()
             }
         }
+
+        binding.squareRootButton.setOnClickListener{
+            val num = encontrarNumeros()
+            if (num != null && num.isNotEmpty() && num.none { it in setOf('+', '-', 'x', '/') }) {
+                anadirRaiz(num)
+            } else {
+                Toast.makeText(this, "Error: Entrada inválida", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
+    private fun anadirRaiz(num: String) {
+        var num2 = num.reversed()
+        var resultado = sqrt(num2.toDouble())
+
+        lista.clear()
+        lista.add(resultado.toString())
+
+        binding.editText.setText("")
+        // Mostrar el resultado en el EditText
+        binding.editText.append(resultado.toString())
+    }
 
 
     private fun encontrarNumeros(): String? {
@@ -142,9 +163,7 @@ class CalculadoraCompleja : AppCompatActivity() {
         }
 
         // Validar si se encontró algún número
-        return if (num.isNotEmpty()) {
-            num
-        } else {
+        return num.ifEmpty {
             null
         }
     }
@@ -162,7 +181,7 @@ class CalculadoraCompleja : AppCompatActivity() {
             lista.add(resultado.toString())
 
             // Mostrar el resultado en el EditText
-            binding.editText.append(" $num2^(-1) ")
+            binding.editText.append("^(-1)")
         } catch (e: NumberFormatException) {
             Toast.makeText(this, "Error: No se pudo calcular el inverso", Toast.LENGTH_LONG).show()
         }
