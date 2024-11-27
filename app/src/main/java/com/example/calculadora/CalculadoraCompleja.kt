@@ -110,19 +110,63 @@ class CalculadoraCompleja : AppCompatActivity() {
             calcularFactorial(texto)
         }
 
-
         binding.funcReciButton.setOnClickListener {
-            val lastValue = lista.lastOrNull()?.toDoubleOrNull()
-            if (lastValue != null && lastValue != 0.0) {
-                val result = 1 / lastValue
-                lista[lista.size - 1] = result.toString()
-                binding.editText.append("^(-1)")
+            val num = encontrarNumeros()
+            if (num != null && num.isNotEmpty() && num.none { it in setOf('+', '-', 'x', '/') }) {
+                anadirFraccion(num)
             } else {
-                Toast.makeText(this, "Entrada no válida o división por cero", Toast.LENGTH_LONG).show()
+                Toast.makeText(this, "Error: Entrada inválida", Toast.LENGTH_LONG).show()
             }
         }
     }
 
+
+
+    private fun encontrarNumeros(): String? {
+        val simbols = setOf("+", "-", "x", "/")
+        var num = ""
+
+        // Verificar si la lista es nula o vacía
+        if (lista.isNullOrEmpty()) {
+            Toast.makeText(this, "Error: Lista vacía o nula", Toast.LENGTH_LONG).show()
+            return null
+        }
+
+        // Buscar los números desde el final de la lista
+        for (i in lista.asReversed()) {
+            if (i in simbols || i.isNullOrBlank()) {
+                break
+            } else {
+                num += i
+            }
+        }
+
+        // Validar si se encontró algún número
+        return if (num.isNotEmpty()) {
+            num
+        } else {
+            null
+        }
+    }
+
+    private fun anadirFraccion(num: String) {
+        try {
+            // Revertimos el número para obtener el orden original
+            val num2 = num.reversed()
+
+            // Validar que el número sea convertible a Double
+            val resultado = 1 / num2.toDouble()
+
+            // Limpiar la lista y agregar el resultado
+            lista.clear()
+            lista.add(resultado.toString())
+
+            // Mostrar el resultado en el EditText
+            binding.editText.append(" $num2^(-1) ")
+        } catch (e: NumberFormatException) {
+            Toast.makeText(this, "Error: No se pudo calcular el inverso", Toast.LENGTH_LONG).show()
+        }
+    }
 
 
 
