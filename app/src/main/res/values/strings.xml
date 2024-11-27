@@ -57,6 +57,7 @@
     <string name="sistema_numeral">Sistema numeral</string>
     <string name="velocidad">Velocidad</string>
     <string name="temperatura">Temperatura</string>
+    <string name="all_clean1">C</string>
 
 
 </resources>

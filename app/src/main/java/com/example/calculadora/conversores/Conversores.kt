@@ -5,8 +5,12 @@ import android.os.Bundle
 import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import com.example.calculadora.R
+import com.example.calculadora.databinding.ConversoresBinding
 
 class Conversores : AppCompatActivity() {
+
+    private lateinit var binding: ConversoresBinding
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,6 +23,8 @@ class Conversores : AppCompatActivity() {
         }
 
     }
+
+
 
 
 }
