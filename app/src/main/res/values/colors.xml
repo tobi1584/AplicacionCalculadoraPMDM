@@ -4,4 +4,5 @@
     <color name="white">#FFFFFFFF</color>
     <color name="backGroundColor">#EBEBEB</color>
     <color name="orange">#FF5722</color>
+    <color name="orangeDisabled">#8DFF5722</color>
 </resources>
