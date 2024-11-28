@@ -82,6 +82,12 @@ class CalculadoraSimple : AppCompatActivity() {
                     }
                     resultadoCalculado = false
                 } else {
+                    if (value == ".") {
+                        if (lista.isEmpty() || lista.last() == ".") {
+                            Toast.makeText(this, "Operación inválida", Toast.LENGTH_SHORT).show()
+                            return@setOnClickListener
+                        }
+                    }
                     lista.add(value)
                     binding.mainEditText.append(value)
                 }
@@ -117,13 +123,11 @@ class CalculadoraSimple : AppCompatActivity() {
             popupMenu.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
                     1 -> {
-                        // Acción para Historial
                         mostrarHistorial()
                         Toast.makeText(this, "Historial seleccionado", Toast.LENGTH_SHORT).show()
                         true
                     }
                     2 -> {
-                        // Acción para Magnitudes
                         Toast.makeText(this, "Magnitudes seleccionadas", Toast.LENGTH_SHORT).show()
                         true
                     }
@@ -296,7 +300,13 @@ class CalculadoraSimple : AppCompatActivity() {
             if (operations[i] in targetOperations) {
                 val result = when (operations[i]) {
                     "x" -> numbers[i] * numbers[i + 1]
-                    "/" -> numbers[i] / numbers[i + 1]
+                    "/" -> {
+                        if (numbers[i + 1] == 0.0) {
+                            Toast.makeText(this, "Error: División por cero", Toast.LENGTH_LONG).show()
+                            return
+                        }
+                        numbers[i] / numbers[i + 1]
+                    }
                     "+" -> numbers[i] + numbers[i + 1]
                     "-" -> numbers[i] - numbers[i + 1]
                     else -> throw IllegalArgumentException("Operación no válida.")

@@ -75,6 +75,13 @@ class CalculadoraCompleja : AppCompatActivity() {
                         val eValue = Math.E
                         lista.add(eValue.toString())
                         binding.editText.append("e")
+                    } else if (value == ".") {
+                        if (lista.isEmpty() || lista.last() == ".") {
+                            Toast.makeText(this, "Operación inválida", Toast.LENGTH_SHORT).show()
+                        } else {
+                            lista.add(value)
+                            binding.editText.append(value)
+                        }
                     } else {
                         lista.add(value)
                         binding.editText.append(value)
@@ -193,6 +200,7 @@ class CalculadoraCompleja : AppCompatActivity() {
         val num = texto.toString().trim().toIntOrNull()
         if (num != null && num > 0) {
             val fact = factorial(num)
+            lista.clear()
             lista.add(fact.toString())
             binding.editText.setText(fact.toString())
         } else {
