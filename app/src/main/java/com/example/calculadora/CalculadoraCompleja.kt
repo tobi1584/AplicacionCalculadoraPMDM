@@ -3,10 +3,12 @@ package com.example.calculadora
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
+import android.text.TextWatcher
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.calculadora.databinding.CalculadoraComplejaBinding
+import kotlin.math.pow
 import kotlin.math.sqrt
 
 class CalculadoraCompleja : AppCompatActivity() {
@@ -41,7 +43,9 @@ class CalculadoraCompleja : AppCompatActivity() {
             binding.divideButton to "/",
             binding.dotButton to ".",
             binding.piButton to "\u03C0",
-            binding.eulerButton to "e"
+            binding.eulerButton to "e",
+            binding.parentOpenButton to "(",
+            binding.parentCloseButton to ")"
         )
     }
 
@@ -135,11 +139,22 @@ class CalculadoraCompleja : AppCompatActivity() {
                 Toast.makeText(this, "Error: Entrada inválida", Toast.LENGTH_LONG).show()
             }
         }
+
+        binding.xRaisedYButton.setOnClickListener {
+            if (lista.isNotEmpty() && lista.last().toDoubleOrNull() != null) {
+                // Si el último elemento es un número, agregamos el operador "^"
+                lista.add("^")
+                binding.editText.append("^")
+            } else {
+                Toast.makeText(this, "Primero debes ingresar un número base", Toast.LENGTH_LONG).show()
+            }
+        }
+
     }
 
     private fun anadirRaiz(num: String) {
-        var num2 = num.reversed()
-        var resultado = sqrt(num2.toDouble())
+        val num2 = num
+        val resultado = sqrt(num2.toDouble())
 
         lista.clear()
         lista.add(resultado.toString())
@@ -151,7 +166,7 @@ class CalculadoraCompleja : AppCompatActivity() {
 
 
     private fun encontrarNumeros(): String? {
-        val simbols = setOf("+", "-", "x", "/")
+        val simbols = setOf("+", "-", "x", "/", "^")
         var num = ""
 
         // Verificar si la lista es nula o vacía
@@ -170,7 +185,7 @@ class CalculadoraCompleja : AppCompatActivity() {
         }
 
         // Validar si se encontró algún número
-        return num.ifEmpty {
+        return num.reversed().ifEmpty {
             null
         }
     }
@@ -178,7 +193,7 @@ class CalculadoraCompleja : AppCompatActivity() {
     private fun anadirFraccion(num: String) {
         try {
             // Revertimos el número para obtener el orden original
-            val num2 = num.reversed()
+            val num2 = num
 
             // Validar que el número sea convertible a Double
             val resultado = 1 / num2.toDouble()
@@ -256,17 +271,50 @@ class CalculadoraCompleja : AppCompatActivity() {
     }
 
     private fun calculo(lista: ArrayList<String>): Double {
-        val operators = setOf("+", "-", "x", "/")
+        if (!areParenthesesBalanced(lista)) {
+            Toast.makeText(this, "Paréntesis no balanceados", Toast.LENGTH_LONG).show()
+            throw IllegalArgumentException("Paréntesis no balanceados")
+        }
+
+        // Resolver paréntesis primero
+        while (lista.contains("(")) {
+            val openIndex = lista.lastIndexOf("(")
+            val closeIndex = lista.subList(openIndex, lista.size).indexOf(")") + openIndex
+            if (closeIndex == -1) {
+                Toast.makeText(this, "Paréntesis no balanceados", Toast.LENGTH_LONG).show()
+                throw IllegalArgumentException("Paréntesis no balanceados")
+            }
+
+            // Extraer la subexpresión
+            val subExpresion = ArrayList(lista.subList(openIndex + 1, closeIndex))
+            val subResultado = calculo(subExpresion) // Resolver recursivamente
+
+            // Reemplazar la subexpresión con su resultado
+            for (i in openIndex..closeIndex) {
+                lista.removeAt(openIndex)
+            }
+            lista.add(openIndex, subResultado.toString())
+        }
+
+        // Continuar con el cálculo normal
+        val operators = setOf("+", "-", "x", "/", "^")
         val numbers = mutableListOf<Double>()
         val operations = mutableListOf<String>()
 
         parseInput(lista, operators, numbers, operations)
         validateExpression(numbers, operations)
+
+        // Procesar potencias primero
+        performOperations(numbers, operations, setOf("^"))
+        // Luego multiplicación y división
         performOperations(numbers, operations, setOf("x", "/"))
+        // Finalmente suma y resta
         performOperations(numbers, operations, setOf("+", "-"))
 
         return roundIfDivision(numbers[0], lista, operators)
     }
+
+
 
     private fun parseInput(
         lista: ArrayList<String>,
@@ -314,6 +362,7 @@ class CalculadoraCompleja : AppCompatActivity() {
         while (i < operations.size) {
             if (operations[i] in targetOperations) {
                 val result = when (operations[i]) {
+                    "^" -> numbers[i].pow(numbers[i + 1])
                     "x" -> numbers[i] * numbers[i + 1]
                     "/" -> numbers[i] / numbers[i + 1]
                     "+" -> numbers[i] + numbers[i + 1]
@@ -329,6 +378,7 @@ class CalculadoraCompleja : AppCompatActivity() {
         }
     }
 
+
     private fun roundIfDivision(result: Double, lista: ArrayList<String>, operators: Set<String>): Double {
         val lastOperation = lista.lastOrNull { it in operators }
         return if (lastOperation == "/") {
@@ -337,6 +387,19 @@ class CalculadoraCompleja : AppCompatActivity() {
             result
         }
     }
+
+    private fun areParenthesesBalanced(lista: ArrayList<String>): Boolean {
+        var balance = 0
+        for (item in lista) {
+            when (item) {
+                "(" -> balance++
+                ")" -> balance--
+            }
+            if (balance < 0) return false // Más paréntesis de cierre que de apertura
+        }
+        return balance == 0
+    }
+
 
 
 }
