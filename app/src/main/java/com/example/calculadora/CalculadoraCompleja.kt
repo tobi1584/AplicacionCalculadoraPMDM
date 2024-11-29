@@ -45,7 +45,10 @@ class CalculadoraCompleja : AppCompatActivity() {
             binding.piButton to "\u03C0",
             binding.eulerButton to "e",
             binding.parentOpenButton to "(",
-            binding.parentCloseButton to ")"
+            binding.parentCloseButton to ")",
+            binding.senButton to "sen(",
+            binding.cosButton to "cos(",
+            binding.tanButton to "tan("
         )
     }
 
@@ -150,7 +153,92 @@ class CalculadoraCompleja : AppCompatActivity() {
             }
         }
 
+        binding.senButton.setOnClickListener {
+            val num = encontrarNumeros()
+            if (num != null && num.isNotEmpty() && num.none { it in setOf('+', '-', 'x', '/') }) {
+                anadirSenoRad(num)
+            } else {
+                Toast.makeText(this, "Error: Entrada inválida", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        binding.cosButton.setOnClickListener {
+            val num = encontrarNumeros()
+            if (num != null && num.isNotEmpty() && num.none { it in setOf('+', '-', 'x', '/') }) {
+                anadirCosenoRad(num)
+            } else {
+                Toast.makeText(this, "Error: Entrada inválida", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        binding.tanButton.setOnClickListener {
+            val num = encontrarNumeros()
+            if (num != null && num.isNotEmpty() && num.none { it in setOf('+', '-', 'x', '/') }) {
+                anadirTangenteRad(num)
+            } else {
+                Toast.makeText(this, "Error: Entrada inválida", Toast.LENGTH_LONG).show()
+            }
+        }
     }
+
+
+    private fun anadirSenoRad(num: String) {
+        try {
+            val num2 = num.toDouble()
+            val formattedNum2 = String.format("%.1f", num2).toDouble()
+
+            val num3 = num
+            val resultado = Math.sin(Math.toRadians(formattedNum2))
+            val formatResultado = String.format("%.3f", resultado)
+            lista.clear()
+            lista.add(formatResultado)
+            binding.editText.setText("")
+            binding.editText.append("sen(")
+            binding.editText.append(num3)
+            binding.editText.append("º)")
+        } catch (e: NumberFormatException) {
+            Toast.makeText(this, "Error: No se pudo calcular el seno", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun anadirCosenoRad(num: String) {
+        try {
+            val num2 = num.toDouble()
+            val formattedNum2 = String.format("%.1f", num2).toDouble()
+
+            val num3 = num
+            val resultado = Math.cos(Math.toRadians(formattedNum2))
+            val formatResultado = String.format("%.3f", resultado)
+            lista.clear()
+            lista.add(formatResultado)
+            binding.editText.setText("")
+            binding.editText.append("cos(")
+            binding.editText.append(num3)
+            binding.editText.append("º)")
+        } catch (e: NumberFormatException) {
+            Toast.makeText(this, "Error: No se pudo calcular el coseno", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun anadirTangenteRad(num: String) {
+        try {
+            val num2 = num.toDouble()
+            val formattedNum2 = String.format("%.1f", num2).toDouble()
+
+            val num3 = num
+            val resultado = Math.tan(Math.toRadians(formattedNum2))
+            val formatResultado = String.format("%.3f", resultado)
+            lista.clear()
+            lista.add(formatResultado)
+            binding.editText.setText("")
+            binding.editText.append("tan(")
+            binding.editText.append(num3)
+            binding.editText.append("º)")
+        } catch (e: NumberFormatException) {
+            Toast.makeText(this, "Error: No se pudo calcular la tangente", Toast.LENGTH_LONG).show()
+        }
+    }
+
 
     private fun anadirRaiz(num: String) {
         val num2 = num

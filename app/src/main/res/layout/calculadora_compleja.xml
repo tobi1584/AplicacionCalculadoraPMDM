@@ -353,7 +353,12 @@ android:background="@color/backGroundColor">
             android:textSize="30sp"
             app:cornerRadius="15dp"
             android:layout_marginStart="5px"
-            android:layout_marginEnd="5px"/>
+            android:layout_marginEnd="5px"
+
+            android:paddingEnd="-20px"
+            android:paddingStart="-20px"
+            android:paddingTop="-20px"
+            android:paddingBottom="-20px"/>
     </LinearLayout>
 
     <LinearLayout
