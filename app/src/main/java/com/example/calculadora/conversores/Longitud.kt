@@ -7,16 +7,20 @@ import android.view.KeyEvent
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.Button
 import android.widget.EditText
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.calculadora.R
+import com.example.calculadora.databinding.LongitudBinding
 import java.text.DecimalFormat
 
 class Longitud : AppCompatActivity() {
 
     private var actualizando = false
+    private lateinit var longitudBinding: LongitudBinding
+    private lateinit var myButtons: Map<Button, String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,10 +51,11 @@ class Longitud : AppCompatActivity() {
         }
 
         optionsSpinner2.adapter = adapter
+        optionsSpinner2.setSelection(options.indexOf("Metro m"))
         optionsSpinner2.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 selectedOptionTextView2.text = options[position]
-                convertirYActualizar(unidadDestinoEditText, unidadOrigenEditText, optionsSpinner2, optionsSpinner)
+                convertirYActualizar(unidadOrigenEditText, unidadDestinoEditText, optionsSpinner, optionsSpinner2)
             }
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
@@ -61,12 +66,6 @@ class Longitud : AppCompatActivity() {
         unidadOrigenEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (!actualizando) {
-                    if (s.isNullOrEmpty()) {
-                        unidadOrigenEditText.setText("0")
-                        unidadOrigenEditText.setSelection(1)
-                    } else if (s.toString() == "0") {
-                        unidadOrigenEditText.setText("")
-                    }
                     convertirYActualizar(unidadOrigenEditText, unidadDestinoEditText, optionsSpinner, optionsSpinner2)
                 }
             }
@@ -77,12 +76,6 @@ class Longitud : AppCompatActivity() {
         unidadDestinoEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 if (!actualizando) {
-                    if (s.isNullOrEmpty()) {
-                        unidadDestinoEditText.setText("0")
-                        unidadDestinoEditText.setSelection(1)
-                    } else if (s.toString() == "0") {
-                        unidadDestinoEditText.setText("")
-                    }
                     convertirYActualizar(unidadDestinoEditText, unidadOrigenEditText, optionsSpinner2, optionsSpinner)
                 }
             }
@@ -90,23 +83,21 @@ class Longitud : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
-        unidadOrigenEditText.setOnKeyListener { v, keyCode, event ->
+        val keyListener = View.OnKeyListener { v, keyCode, event ->
             if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                convertirYActualizar(unidadOrigenEditText, unidadDestinoEditText, optionsSpinner, optionsSpinner2)
+                if (v.id == R.id.unidadOrigen) {
+                    convertirYActualizar(unidadOrigenEditText, unidadDestinoEditText, optionsSpinner, optionsSpinner2)
+                } else if (v.id == R.id.unidadDestino) {
+                    convertirYActualizar(unidadDestinoEditText, unidadOrigenEditText, optionsSpinner2, optionsSpinner)
+                }
                 true
             } else {
                 false
             }
         }
 
-        unidadDestinoEditText.setOnKeyListener { v, keyCode, event ->
-            if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
-                convertirYActualizar(unidadDestinoEditText, unidadOrigenEditText, optionsSpinner2, optionsSpinner)
-                true
-            } else {
-                false
-            }
-        }
+        unidadOrigenEditText.setOnKeyListener(keyListener)
+        unidadDestinoEditText.setOnKeyListener(keyListener)
     }
 
     private fun convertirYActualizar(origen: EditText, destino: EditText, spinnerOrigen: Spinner, spinnerDestino: Spinner) {
@@ -114,7 +105,7 @@ class Longitud : AppCompatActivity() {
         val unidadOrigen = spinnerOrigen.selectedItem.toString()
         val unidadDestino = spinnerDestino.selectedItem.toString()
         val resultado = convertirUnidad(unidadOrigen, unidadDestino, valor)
-        var resultadoFormateado = resultado.toString()
+        val resultadoFormateado = if (resultado % 1 == 0.0) resultado.toInt().toString() else resultado.toString()
 
         actualizando = true
         destino.setText(resultadoFormateado)
