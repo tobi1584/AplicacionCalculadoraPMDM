@@ -3,7 +3,6 @@ package com.example.calculadora
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
-import android.text.TextWatcher
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
@@ -189,7 +188,7 @@ class CalculadoraCompleja : AppCompatActivity() {
             val num = encontrarNumeros()
             // Verificar si el número es válido
             if (num != null && num.isNotEmpty() && num.none { it in setOf('+', '-', 'x', '/') }) {
-                anadirSenoRad(num)
+                anadirSeno(num)
             } else {
                 Toast.makeText(this, "Error: Entrada inválida", Toast.LENGTH_LONG).show()
             }
@@ -199,7 +198,7 @@ class CalculadoraCompleja : AppCompatActivity() {
             val num = encontrarNumeros()
             // Verificar si el número es válido
             if (num != null && num.isNotEmpty() && num.none { it in setOf('+', '-', 'x', '/') }) {
-                anadirCosenoRad(num)
+                anadirCoseno(num)
             } else {
                 Toast.makeText(this, "Error: Entrada inválida", Toast.LENGTH_LONG).show()
             }
@@ -209,7 +208,7 @@ class CalculadoraCompleja : AppCompatActivity() {
             val num = encontrarNumeros()
             // Verificar si el número es válido
             if (num != null && num.isNotEmpty() && num.none { it in setOf('+', '-', 'x', '/') }) {
-                anadirTangenteRad(num)
+                anadirTangente(num)
             } else {
                 Toast.makeText(this, "Error: Entrada inválida", Toast.LENGTH_LONG).show()
             }
@@ -217,7 +216,7 @@ class CalculadoraCompleja : AppCompatActivity() {
     }
 
 
-    private fun anadirSenoRad(num: String) {
+    private fun anadirSeno(num: String) {
         try {
             val currentText = binding.degButton.text.toString()
             if (currentText == getString(R.string.deg)) {
@@ -294,7 +293,7 @@ class CalculadoraCompleja : AppCompatActivity() {
         }
     }
 
-    private fun anadirCosenoRad(num: String) {
+    private fun anadirCoseno(num: String) {
         try {
             val currentText = binding.degButton.text.toString()
             if (currentText == getString(R.string.deg)) {
@@ -371,7 +370,7 @@ class CalculadoraCompleja : AppCompatActivity() {
         }
     }
 
-    private fun anadirTangenteRad(num: String) {
+    private fun anadirTangente(num: String) {
         try {
             val currentText = binding.degButton.text.toString()
             if (currentText == getString(R.string.deg)) {
