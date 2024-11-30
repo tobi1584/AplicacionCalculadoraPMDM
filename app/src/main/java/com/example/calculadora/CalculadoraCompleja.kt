@@ -221,26 +221,52 @@ class CalculadoraCompleja : AppCompatActivity() {
         try {
             val currentText = binding.degButton.text.toString()
             if (currentText == getString(R.string.deg)) {
-                // Convertir el número a Double
-                val num2 = num.toDouble()
-                val formattedNum2 = String.format("%.1f", num2).toDouble() // Redondear a 1 decimal
+                val currentText2 = binding.senButton.text.toString()
+                if (currentText2 == "sin") {
+                    // Convertir el número a Double
+                    val num2 = num.toDouble()
+                    val formattedNum2 =
+                        String.format("%.1f", num2).toDouble() // Redondear a 1 decimal
 
-                // Guardar el número original
-                val num3 = num
+                    // Guardar el número original
+                    val num3 = num
 
-                // Calcular el seno
-                val resultado = Math.sin(Math.toRadians(formattedNum2))
-                val formatResultado = String.format("%.3f", resultado)
+                    // Calcular el seno
+                    val resultado = Math.sin(Math.toRadians(formattedNum2))
+                    val formatResultado = String.format("%.3f", resultado)
 
-                // Limpiar la lista y agregar el resultado
-                lista.clear()
-                lista.add(formatResultado)
+                    // Limpiar la lista y agregar el resultado
+                    lista.clear()
+                    lista.add(formatResultado)
 
-                // Mostrar el resultado en el EditText
-                binding.editText.setText("")
-                binding.editText.append("sen(")
-                binding.editText.append(num3)
-                binding.editText.append("º)")
+                    // Mostrar el resultado en el EditText
+                    binding.editText.setText("")
+                    binding.editText.append("sen(")
+                    binding.editText.append(num3)
+                    binding.editText.append("º)")
+                } else {
+                    // Convertir el número a Double
+                    val num2 = num.toDouble()
+                    val formattedNum2 = String.format("%.1f", num2).toDouble() // Redondear a 1 decimal
+
+                    // Guardar el número original
+                    val num3 = num
+
+                    // Calcular el seno
+                    val resultado = Math.asin(formattedNum2)
+                    val resultado2 = Math.toDegrees(resultado)
+                    val formatResultado = String.format("%.3f", resultado2)
+
+                    // Limpiar la lista y agregar el resultado
+                    lista.clear()
+                    lista.add(formatResultado)
+
+                    // Mostrar el resultado en el EditText
+                    binding.editText.setText("")
+                    binding.editText.append("arcsin(")
+                    binding.editText.append(num3)
+                    binding.editText.append(")")
+                }
             } else {
                 // Convertir el número a Double
                 val num2 = num.toDouble()
@@ -272,26 +298,52 @@ class CalculadoraCompleja : AppCompatActivity() {
         try {
             val currentText = binding.degButton.text.toString()
             if (currentText == getString(R.string.deg)) {
-                // Convertir el número a Double
-                val num2 = num.toDouble()
-                val formattedNum2 = String.format("%.1f", num2).toDouble() // Redondear a 1 decimal
+                val currentText2 = binding.cosButton.text.toString()
+                if (currentText2 == "cos") {
+                    // Convertir el número a Double
+                    val num2 = num.toDouble()
+                    val formattedNum2 =
+                        String.format("%.1f", num2).toDouble() // Redondear a 1 decimal
 
-                // Guardar el número original
-                val num3 = num
+                    // Guardar el número original
+                    val num3 = num
 
-                // Calcular el coseno
-                val resultado = Math.cos(Math.toRadians(formattedNum2))
-                val formatResultado = String.format("%.3f", resultado)
+                    // Calcular el coseno
+                    val resultado = Math.cos(Math.toRadians(formattedNum2))
+                    val formatResultado = String.format("%.3f", resultado)
 
-                // Limpiar la lista y agregar el resultado
-                lista.clear()
-                lista.add(formatResultado)
+                    // Limpiar la lista y agregar el resultado
+                    lista.clear()
+                    lista.add(formatResultado)
 
-                // Mostrar el resultado en el EditText
-                binding.editText.setText("")
-                binding.editText.append("cos(")
-                binding.editText.append(num3)
-                binding.editText.append("º)")
+                    // Mostrar el resultado en el EditText
+                    binding.editText.setText("")
+                    binding.editText.append("cos(")
+                    binding.editText.append(num3)
+                    binding.editText.append("º)")
+                } else {
+                    // Convertir el número a Double
+                    val num2 = num.toDouble()
+                    val formattedNum2 = String.format("%.1f", num2).toDouble() // Redondear a 1 decimal
+
+                    // Guardar el número original
+                    val num3 = num
+
+                    // Calcular el coseno
+                    val resultado = Math.acos(formattedNum2)
+                    val resultado2 = Math.toDegrees(resultado)
+                    val formatResultado = String.format("%.3f", resultado2)
+
+                    // Limpiar la lista y agregar el resultado
+                    lista.clear()
+                    lista.add(formatResultado)
+
+                    // Mostrar el resultado en el EditText
+                    binding.editText.setText("")
+                    binding.editText.append("arccos(")
+                    binding.editText.append(num3)
+                    binding.editText.append(")")
+                }
             } else {
                 // Convertir el número a Double
                 val num2 = num.toDouble()
@@ -323,26 +375,52 @@ class CalculadoraCompleja : AppCompatActivity() {
         try {
             val currentText = binding.degButton.text.toString()
             if (currentText == getString(R.string.deg)) {
-                // Convertir el número a Double
-                val num2 = num.toDouble()
-                val formattedNum2 = String.format("%.1f", num2).toDouble() // Redondear a 1 decimal
+                val currentText2 = binding.tanButton.text.toString()
+                if (currentText2 == "tan") {
+                    // Convertir el número a Double
+                    val num2 = num.toDouble()
+                    val formattedNum2 =
+                        String.format("%.1f", num2).toDouble() // Redondear a 1 decimal
 
-                // Guardar el número original
-                val num3 = num
+                    // Guardar el número original
+                    val num3 = num
 
-                // Calcular la tangente
-                val resultado = Math.tan(Math.toRadians(formattedNum2))
-                val formatResultado = String.format("%.3f", resultado)
+                    // Calcular la tangente
+                    val resultado = Math.tan(Math.toRadians(formattedNum2))
+                    val formatResultado = String.format("%.3f", resultado)
 
-                // Limpiar la lista y agregar el resultado
-                lista.clear()
-                lista.add(formatResultado)
+                    // Limpiar la lista y agregar el resultado
+                    lista.clear()
+                    lista.add(formatResultado)
 
-                // Mostrar el resultado en el EditText
-                binding.editText.setText("")
-                binding.editText.append("tan(")
-                binding.editText.append(num3)
-                binding.editText.append("º)")
+                    // Mostrar el resultado en el EditText
+                    binding.editText.setText("")
+                    binding.editText.append("tan(")
+                    binding.editText.append(num3)
+                    binding.editText.append("º)")
+                } else {
+                    // Convertir el número a Double
+                    val num2 = num.toDouble()
+                    val formattedNum2 = String.format("%.1f", num2).toDouble() // Redondear a 1 decimal
+
+                    // Guardar el número original
+                    val num3 = num
+
+                    // Calcular la tangente
+                    val resultado = Math.atan(formattedNum2)
+                    val resultado2 = Math.toDegrees(resultado)
+                    val formatResultado = String.format("%.3f", resultado2)
+
+                    // Limpiar la lista y agregar el resultado
+                    lista.clear()
+                    lista.add(formatResultado)
+
+                    // Mostrar el resultado en el EditText
+                    binding.editText.setText("")
+                    binding.editText.append("arctan(")
+                    binding.editText.append(num3)
+                    binding.editText.append(")")
+                }
             } else {
                 // Convertir el número a Double
                 val num2 = num.toDouble()
