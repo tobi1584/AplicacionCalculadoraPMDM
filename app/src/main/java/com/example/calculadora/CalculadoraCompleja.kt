@@ -98,6 +98,15 @@ class CalculadoraCompleja : AppCompatActivity() {
         }
 
 
+        binding.degButton.setOnClickListener {
+            val currentText = binding.degButton.text.toString()
+            if (currentText == getString(R.string.deg)) {
+                binding.degButton.text = getString(R.string.rad)
+            } else {
+                binding.degButton.text = getString(R.string.deg)
+            }
+        }
+
         binding.equalsButton.setOnClickListener {
             resultado()
         }
@@ -187,26 +196,50 @@ class CalculadoraCompleja : AppCompatActivity() {
 
     private fun anadirSenoRad(num: String) {
         try {
-            // Convertir el número a Double
-            val num2 = num.toDouble()
-            val formattedNum2 = String.format("%.1f", num2).toDouble() // Redondear a 1 decimal
+            val currentText = binding.degButton.text.toString()
+            if (currentText == getString(R.string.deg)) {
+                // Convertir el número a Double
+                val num2 = num.toDouble()
+                val formattedNum2 = String.format("%.1f", num2).toDouble() // Redondear a 1 decimal
 
-            // Guardar el número original
-            val num3 = num
+                // Guardar el número original
+                val num3 = num
 
-            // Calcular el seno
-            val resultado = Math.sin(Math.toRadians(formattedNum2))
-            val formatResultado = String.format("%.3f", resultado)
+                // Calcular el seno
+                val resultado = Math.sin(Math.toRadians(formattedNum2))
+                val formatResultado = String.format("%.3f", resultado)
 
-            // Limpiar la lista y agregar el resultado
-            lista.clear()
-            lista.add(formatResultado)
+                // Limpiar la lista y agregar el resultado
+                lista.clear()
+                lista.add(formatResultado)
 
-            // Mostrar el resultado en el EditText
-            binding.editText.setText("")
-            binding.editText.append("sen(")
-            binding.editText.append(num3)
-            binding.editText.append("º)")
+                // Mostrar el resultado en el EditText
+                binding.editText.setText("")
+                binding.editText.append("sen(")
+                binding.editText.append(num3)
+                binding.editText.append("º)")
+            } else {
+                // Convertir el número a Double
+                val num2 = num.toDouble()
+                val formattedNum2 = String.format("%.1f", num2).toDouble() // Redondear a 1 decimal
+
+                // Guardar el número original
+                val num3 = num
+
+                // Calcular el seno
+                val resultado = Math.sin(formattedNum2)
+                val formatResultado = String.format("%.3f", resultado)
+
+                // Limpiar la lista y agregar el resultado
+                lista.clear()
+                lista.add(formatResultado)
+
+                // Mostrar el resultado en el EditText
+                binding.editText.setText("")
+                binding.editText.append("sen(")
+                binding.editText.append(num3)
+                binding.editText.append(")")
+            }
         } catch (e: NumberFormatException) { // Capturar errores de conversión
             Toast.makeText(this, "Error: No se pudo calcular el seno", Toast.LENGTH_LONG).show()
         }
@@ -214,26 +247,50 @@ class CalculadoraCompleja : AppCompatActivity() {
 
     private fun anadirCosenoRad(num: String) {
         try {
-            // Convertir el número a Double
-            val num2 = num.toDouble()
-            val formattedNum2 = String.format("%.1f", num2).toDouble()
+            val currentText = binding.degButton.text.toString()
+            if (currentText == getString(R.string.deg)) {
+                // Convertir el número a Double
+                val num2 = num.toDouble()
+                val formattedNum2 = String.format("%.1f", num2).toDouble() // Redondear a 1 decimal
 
-            // Guardar el número original
-            val num3 = num
+                // Guardar el número original
+                val num3 = num
 
-            // Calcular el coseno
-            val resultado = Math.cos(Math.toRadians(formattedNum2))
-            val formatResultado = String.format("%.3f", resultado)
+                // Calcular el coseno
+                val resultado = Math.cos(Math.toRadians(formattedNum2))
+                val formatResultado = String.format("%.3f", resultado)
 
-            // Limpiar la lista y agregar el resultado
-            lista.clear()
-            lista.add(formatResultado)
+                // Limpiar la lista y agregar el resultado
+                lista.clear()
+                lista.add(formatResultado)
 
-            // Mostrar el resultado en el EditText
-            binding.editText.setText("")
-            binding.editText.append("cos(")
-            binding.editText.append(num3)
-            binding.editText.append("º)")
+                // Mostrar el resultado en el EditText
+                binding.editText.setText("")
+                binding.editText.append("cos(")
+                binding.editText.append(num3)
+                binding.editText.append("º)")
+            } else {
+                // Convertir el número a Double
+                val num2 = num.toDouble()
+                val formattedNum2 = String.format("%.1f", num2).toDouble() // Redondear a 1 decimal
+
+                // Guardar el número original
+                val num3 = num
+
+                // Calcular el coseno
+                val resultado = Math.cos(formattedNum2)
+                val formatResultado = String.format("%.3f", resultado)
+
+                // Limpiar la lista y agregar el resultado
+                lista.clear()
+                lista.add(formatResultado)
+
+                // Mostrar el resultado en el EditText
+                binding.editText.setText("")
+                binding.editText.append("cos(")
+                binding.editText.append(num3)
+                binding.editText.append(")")
+            }
         } catch (e: NumberFormatException) { // Capturar errores de conversión
             Toast.makeText(this, "Error: No se pudo calcular el coseno", Toast.LENGTH_LONG).show()
         }
@@ -241,26 +298,50 @@ class CalculadoraCompleja : AppCompatActivity() {
 
     private fun anadirTangenteRad(num: String) {
         try {
-            // Convertir el número a Double
-            val num2 = num.toDouble()
-            val formattedNum2 = String.format("%.1f", num2).toDouble()
+            val currentText = binding.degButton.text.toString()
+            if (currentText == getString(R.string.deg)) {
+                // Convertir el número a Double
+                val num2 = num.toDouble()
+                val formattedNum2 = String.format("%.1f", num2).toDouble() // Redondear a 1 decimal
 
-            // Guardar el número original
-            val num3 = num
+                // Guardar el número original
+                val num3 = num
 
-            // Calcular la tangente
-            val resultado = Math.tan(Math.toRadians(formattedNum2))
-            val formatResultado = String.format("%.3f", resultado)
+                // Calcular la tangente
+                val resultado = Math.tan(Math.toRadians(formattedNum2))
+                val formatResultado = String.format("%.3f", resultado)
 
-            // Limpiar la lista y agregar el resultado
-            lista.clear()
-            lista.add(formatResultado)
+                // Limpiar la lista y agregar el resultado
+                lista.clear()
+                lista.add(formatResultado)
 
-            // Mostrar el resultado en el EditText
-            binding.editText.setText("")
-            binding.editText.append("tan(")
-            binding.editText.append(num3)
-            binding.editText.append("º)")
+                // Mostrar el resultado en el EditText
+                binding.editText.setText("")
+                binding.editText.append("tan(")
+                binding.editText.append(num3)
+                binding.editText.append("º)")
+            } else {
+                // Convertir el número a Double
+                val num2 = num.toDouble()
+                val formattedNum2 = String.format("%.1f", num2).toDouble() // Redondear a 1 decimal
+
+                // Guardar el número original
+                val num3 = num
+
+                // Calcular la tangente
+                val resultado = Math.tan(formattedNum2)
+                val formatResultado = String.format("%.3f", resultado)
+
+                // Limpiar la lista y agregar el resultado
+                lista.clear()
+                lista.add(formatResultado)
+
+                // Mostrar el resultado en el EditText
+                binding.editText.setText("")
+                binding.editText.append("tan(")
+                binding.editText.append(num3)
+                binding.editText.append(")")
+            }
         } catch (e: NumberFormatException) { // Capturar errores de conversión
             Toast.makeText(this, "Error: No se pudo calcular la tangente", Toast.LENGTH_LONG).show()
         }
