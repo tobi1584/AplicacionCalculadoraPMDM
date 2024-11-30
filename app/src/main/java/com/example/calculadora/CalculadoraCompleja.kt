@@ -7,6 +7,7 @@ import android.text.TextWatcher
 import android.widget.Button
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.example.calculadora.databinding.CalculadoraComplejaBinding
 import kotlin.math.pow
 import kotlin.math.sqrt
@@ -98,11 +99,33 @@ class CalculadoraCompleja : AppCompatActivity() {
         }
 
 
+        binding.secondButton.setOnClickListener {
+            val currentText = binding.senButton.text.toString()
+
+            if (currentText == "sin") {
+                binding.degButton.isEnabled = false
+                binding.degButton.setTextColor(ContextCompat.getColor(this, R.color.gray))
+                binding.senButton.text = "sin⁻¹"
+                binding.cosButton.text = "cos⁻¹"
+                binding.tanButton.text = "tan⁻¹"
+            } else {
+                binding.degButton.isEnabled = true
+                binding.degButton.setTextColor(ContextCompat.getColor(this, R.color.black))
+                binding.senButton.text = "sin"
+                binding.cosButton.text = "cos"
+                binding.tanButton.text = "tan"
+            }
+        }
+
         binding.degButton.setOnClickListener {
             val currentText = binding.degButton.text.toString()
             if (currentText == getString(R.string.deg)) {
+                binding.secondButton.isEnabled = false
+                binding.secondButton.setTextColor(ContextCompat.getColor(this, R.color.gray))
                 binding.degButton.text = getString(R.string.rad)
             } else {
+                binding.secondButton.isEnabled = true
+                binding.secondButton.setTextColor(ContextCompat.getColor(this, R.color.black))
                 binding.degButton.text = getString(R.string.deg)
             }
         }
