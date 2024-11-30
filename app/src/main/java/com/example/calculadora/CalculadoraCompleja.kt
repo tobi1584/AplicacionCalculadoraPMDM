@@ -155,6 +155,7 @@ class CalculadoraCompleja : AppCompatActivity() {
 
         binding.senButton.setOnClickListener {
             val num = encontrarNumeros()
+            // Verificar si el número es válido
             if (num != null && num.isNotEmpty() && num.none { it in setOf('+', '-', 'x', '/') }) {
                 anadirSenoRad(num)
             } else {
@@ -164,6 +165,7 @@ class CalculadoraCompleja : AppCompatActivity() {
 
         binding.cosButton.setOnClickListener {
             val num = encontrarNumeros()
+            // Verificar si el número es válido
             if (num != null && num.isNotEmpty() && num.none { it in setOf('+', '-', 'x', '/') }) {
                 anadirCosenoRad(num)
             } else {
@@ -173,6 +175,7 @@ class CalculadoraCompleja : AppCompatActivity() {
 
         binding.tanButton.setOnClickListener {
             val num = encontrarNumeros()
+            // Verificar si el número es válido
             if (num != null && num.isNotEmpty() && num.none { it in setOf('+', '-', 'x', '/') }) {
                 anadirTangenteRad(num)
             } else {
@@ -184,57 +187,81 @@ class CalculadoraCompleja : AppCompatActivity() {
 
     private fun anadirSenoRad(num: String) {
         try {
+            // Convertir el número a Double
             val num2 = num.toDouble()
-            val formattedNum2 = String.format("%.1f", num2).toDouble()
+            val formattedNum2 = String.format("%.1f", num2).toDouble() // Redondear a 1 decimal
 
+            // Guardar el número original
             val num3 = num
+
+            // Calcular el seno
             val resultado = Math.sin(Math.toRadians(formattedNum2))
             val formatResultado = String.format("%.3f", resultado)
+
+            // Limpiar la lista y agregar el resultado
             lista.clear()
             lista.add(formatResultado)
+
+            // Mostrar el resultado en el EditText
             binding.editText.setText("")
             binding.editText.append("sen(")
             binding.editText.append(num3)
             binding.editText.append("º)")
-        } catch (e: NumberFormatException) {
+        } catch (e: NumberFormatException) { // Capturar errores de conversión
             Toast.makeText(this, "Error: No se pudo calcular el seno", Toast.LENGTH_LONG).show()
         }
     }
 
     private fun anadirCosenoRad(num: String) {
         try {
+            // Convertir el número a Double
             val num2 = num.toDouble()
             val formattedNum2 = String.format("%.1f", num2).toDouble()
 
+            // Guardar el número original
             val num3 = num
+
+            // Calcular el coseno
             val resultado = Math.cos(Math.toRadians(formattedNum2))
             val formatResultado = String.format("%.3f", resultado)
+
+            // Limpiar la lista y agregar el resultado
             lista.clear()
             lista.add(formatResultado)
+
+            // Mostrar el resultado en el EditText
             binding.editText.setText("")
             binding.editText.append("cos(")
             binding.editText.append(num3)
             binding.editText.append("º)")
-        } catch (e: NumberFormatException) {
+        } catch (e: NumberFormatException) { // Capturar errores de conversión
             Toast.makeText(this, "Error: No se pudo calcular el coseno", Toast.LENGTH_LONG).show()
         }
     }
 
     private fun anadirTangenteRad(num: String) {
         try {
+            // Convertir el número a Double
             val num2 = num.toDouble()
             val formattedNum2 = String.format("%.1f", num2).toDouble()
 
+            // Guardar el número original
             val num3 = num
+
+            // Calcular la tangente
             val resultado = Math.tan(Math.toRadians(formattedNum2))
             val formatResultado = String.format("%.3f", resultado)
+
+            // Limpiar la lista y agregar el resultado
             lista.clear()
             lista.add(formatResultado)
+
+            // Mostrar el resultado en el EditText
             binding.editText.setText("")
             binding.editText.append("tan(")
             binding.editText.append(num3)
             binding.editText.append("º)")
-        } catch (e: NumberFormatException) {
+        } catch (e: NumberFormatException) { // Capturar errores de conversión
             Toast.makeText(this, "Error: No se pudo calcular la tangente", Toast.LENGTH_LONG).show()
         }
     }
