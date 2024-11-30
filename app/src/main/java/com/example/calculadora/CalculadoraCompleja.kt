@@ -48,7 +48,9 @@ class CalculadoraCompleja : AppCompatActivity() {
             binding.parentCloseButton to ")",
             binding.senButton to "sen(",
             binding.cosButton to "cos(",
-            binding.tanButton to "tan("
+            binding.tanButton to "tan(",
+            binding.lgButton to "lg(",
+            binding.lnButton to "ln("
         )
     }
 
@@ -213,8 +215,70 @@ class CalculadoraCompleja : AppCompatActivity() {
                 Toast.makeText(this, "Error: Entrada inválida", Toast.LENGTH_LONG).show()
             }
         }
+
+        binding.lgButton.setOnClickListener {
+            val num = encontrarNumeros()
+            if (num != null && num.isNotEmpty() && num.none { it in setOf('+', '-', 'x', '/') }) {
+                anadirLogaritmo(num)
+            } else {
+                Toast.makeText(this, "Error: Entrada inválida", Toast.LENGTH_LONG).show()
+            }
+        }
+
+        binding.lnButton.setOnClickListener {
+            val num = encontrarNumeros()
+            if (num != null && num.isNotEmpty() && num.none { it in setOf('+', '-', 'x', '/') }) {
+                anadirLogaritmoNep(num)
+            } else {
+                Toast.makeText(this, "Error: Entrada inválida", Toast.LENGTH_LONG).show()
+            }
+        }
     }
 
+
+    private fun anadirLogaritmo(num: String) {
+        try {
+            val num2 = num.toDouble()
+            val formattedNum2 = String.format("%.1f", num2).toDouble() // Redondear a 1 decimal
+
+            val num3 = num
+
+            val resultado = Math.log10(formattedNum2)
+            val formatResultado = String.format("%.3f", resultado)
+
+            lista.clear()
+            lista.add(formatResultado)
+
+            binding.editText.setText("")
+            binding.editText.append("lg(")
+            binding.editText.append(num3)
+            binding.editText.append(")")
+        } catch (e: NumberFormatException) {
+            Toast.makeText(this, "Error: No se pudo calcular el logaritmo", Toast.LENGTH_LONG).show()
+        }
+    }
+
+    private fun anadirLogaritmoNep(num: String) {
+        try {
+            val num2 = num.toDouble()
+            val formattedNum2 = String.format("%.1f", num2).toDouble() // Redondear a 1 decimal
+
+            val num3 = num
+
+            val resultado = Math.log(formattedNum2)
+            val formatResultado = String.format("%.3f", resultado)
+
+            lista.clear()
+            lista.add(formatResultado)
+
+            binding.editText.setText("")
+            binding.editText.append("ln(")
+            binding.editText.append(num3)
+            binding.editText.append(")")
+        } catch (e: NumberFormatException) {
+            Toast.makeText(this, "Error: No se pudo calcular el logaritmo", Toast.LENGTH_LONG).show()
+        }
+    }
 
     private fun anadirSeno(num: String) {
         try {
