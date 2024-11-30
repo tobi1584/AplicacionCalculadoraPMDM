@@ -50,7 +50,8 @@ class CalculadoraCompleja : AppCompatActivity() {
             binding.cosButton to "cos(",
             binding.tanButton to "tan(",
             binding.lgButton to "lg(",
-            binding.lnButton to "ln("
+            binding.lnButton to "ln(",
+            binding.squareRootButton to "√"
         )
     }
 
@@ -154,8 +155,12 @@ class CalculadoraCompleja : AppCompatActivity() {
         }
 
         binding.factorialButton.setOnClickListener {
-            val texto = binding.editText.text;
-            calcularFactorial(texto)
+            val num = encontrarNumeros()
+            if (num != null && num.isNotEmpty() && num.none { it in setOf('+', '-', 'x', '/') }) {
+                calcularFactorial(num)
+            } else {
+                Toast.makeText(this, "Error: Entrada inválida", Toast.LENGTH_LONG).show()
+            }
         }
 
         binding.funcReciButton.setOnClickListener {
@@ -513,15 +518,28 @@ class CalculadoraCompleja : AppCompatActivity() {
 
 
     private fun anadirRaiz(num: String) {
-        val num2 = num
-        val resultado = sqrt(num2.toDouble())
+        try {
+            val num2 = num.toDouble()
+            val num3 = num
 
-        lista.clear()
-        lista.add(resultado.toString())
+            if (num2 < 0) {
+                Toast.makeText(this, "Error: Número negativo", Toast.LENGTH_LONG).show()
+                return
+            }
 
-        binding.editText.setText("")
-        // Mostrar el resultado en el EditText
-        binding.editText.append(resultado.toString())
+            val resultado = sqrt(num2)
+            val formatResultado = String.format("%.3f", resultado)
+
+            lista.clear()
+            lista.add(formatResultado)
+
+            binding.editText.setText("")
+            binding.editText.append("√(")
+            binding.editText.append(num3)
+            binding.editText.append(")")
+        } catch (e: NumberFormatException) {
+            Toast.makeText(this, "Error: No se pudo calcular la raíz cuadrada", Toast.LENGTH_LONG).show()
+        }
     }
 
 
@@ -571,17 +589,25 @@ class CalculadoraCompleja : AppCompatActivity() {
 
 
 
-    private fun calcularFactorial(texto: Editable) {
-        val num = texto.toString().trim().toIntOrNull()
-        if (num != null && num > 0) {
-            val fact = factorial(num)
+    private fun calcularFactorial(num: String) {
+        try {
+            val num2 = num.toInt()
+            val num3 = num
+
+            if (num2 < 0) {
+                Toast.makeText(this, "Error: Número negativo", Toast.LENGTH_LONG).show()
+                return
+            }
+
+            val resultado = factorial(num2)
             lista.clear()
-            lista.add(fact.toString())
-            binding.editText.setText(fact.toString())
-        } else {
-            Toast.makeText(this, "Entrada no válida", Toast.LENGTH_LONG).show()
-            lista.clear()
+            lista.add(resultado.toString())
+
             binding.editText.setText("")
+            binding.editText.append(num3)
+            binding.editText.append("!")
+        } catch (e: NumberFormatException) {
+            Toast.makeText(this, "Error: Número inválido", Toast.LENGTH_LONG).show()
         }
     }
 
