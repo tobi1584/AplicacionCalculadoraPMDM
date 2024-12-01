@@ -9,6 +9,7 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
@@ -21,17 +22,36 @@ class Longitud : AppCompatActivity() {
     private var actualizando = false
     private lateinit var longitudBinding: LongitudBinding
     private lateinit var myButtons: Map<Button, String>
+    private lateinit var unidadOrigenEditText: EditText
+    private lateinit var unidadDestinoEditText: EditText
+    private lateinit var editTextActual: EditText // Declare editTextActual
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.longitud)
 
+        unidadOrigenEditText = findViewById(R.id.unidadOrigen)
+        unidadDestinoEditText = findViewById(R.id.unidadDestino)
+
+        // Initialize editTextActual with one of the EditTexts
+        editTextActual = unidadOrigenEditText
+
+        unidadOrigenEditText.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                editTextActual = unidadOrigenEditText
+            }
+        }
+
+        unidadDestinoEditText.setOnFocusChangeListener { _, hasFocus ->
+            if (hasFocus) {
+                editTextActual = unidadDestinoEditText
+            }
+        }
+
         val optionsSpinner: Spinner = findViewById(R.id.spinner1)
         val selectedOptionTextView: TextView = findViewById(R.id.seleccion1)
         val optionsSpinner2: Spinner = findViewById(R.id.spinner2)
         val selectedOptionTextView2: TextView = findViewById(R.id.seleccion2)
-        val unidadOrigenEditText: EditText = findViewById(R.id.unidadOrigen)
-        val unidadDestinoEditText: EditText = findViewById(R.id.unidadDestino)
 
         val options = arrayOf("Kilómetro km", "Metro m", "Decímetro dm", "Centímetro cm",
             "Milímetro mm", "Micrómetro µm", "Nanómetro nm", "Picómetro pm", "Milla náutica nmi",
@@ -98,14 +118,19 @@ class Longitud : AppCompatActivity() {
 
         unidadOrigenEditText.setOnKeyListener(keyListener)
         unidadDestinoEditText.setOnKeyListener(keyListener)
+
+        // Initialize buttons
+        initButtons()
     }
 
     private fun convertirYActualizar(origen: EditText, destino: EditText, spinnerOrigen: Spinner, spinnerDestino: Spinner) {
+        if (actualizando) return
+
         val valor = origen.text.toString().toDoubleOrNull() ?: 0.0
         val unidadOrigen = spinnerOrigen.selectedItem.toString()
         val unidadDestino = spinnerDestino.selectedItem.toString()
         val resultado = convertirUnidad(unidadOrigen, unidadDestino, valor)
-        val resultadoFormateado = if (resultado % 1 == 0.0) resultado.toInt().toString() else resultado.toString()
+        val resultadoFormateado = if (resultado % 1 == 0.0) resultado.toLong().toString() else resultado.toString()
 
         actualizando = true
         destino.setText(resultadoFormateado)
@@ -114,6 +139,46 @@ class Longitud : AppCompatActivity() {
         ajustarTamañoTexto(origen, origen.text.toString())
 
         actualizando = false
+    }
+
+    private fun initButtons() {
+        myButtons = mapOf(
+            findViewById<Button>(R.id.number0) to "0",
+            findViewById<Button>(R.id.number1) to "1",
+            findViewById<Button>(R.id.number2) to "2",
+            findViewById<Button>(R.id.number3) to "3",
+            findViewById<Button>(R.id.number4) to "4",
+            findViewById<Button>(R.id.number5) to "5",
+            findViewById<Button>(R.id.number6) to "6",
+            findViewById<Button>(R.id.number7) to "7",
+            findViewById<Button>(R.id.number8) to "8",
+            findViewById<Button>(R.id.number9) to "9",
+            findViewById<Button>(R.id.dotButton) to "."
+        )
+
+        myButtons.forEach { (button, value) ->
+            button.setOnClickListener {
+                editTextActual.append(value)
+                if (editTextActual == unidadOrigenEditText) {
+                    convertirYActualizar(unidadOrigenEditText, unidadDestinoEditText, findViewById(R.id.spinner1), findViewById(R.id.spinner2))
+                } else {
+                    convertirYActualizar(unidadDestinoEditText, unidadOrigenEditText, findViewById(R.id.spinner2), findViewById(R.id.spinner1))
+                }
+            }
+        }
+
+        findViewById<Button>(R.id.cleanAllButton).setOnClickListener {
+            unidadOrigenEditText.text.clear()
+            unidadDestinoEditText.text.clear()
+        }
+
+        findViewById<ImageButton>(R.id.deleteButton).setOnClickListener {
+            val text = editTextActual.text
+            if (text.isNotEmpty()) {
+                editTextActual.setText(text.substring(0, text.length - 1))
+                editTextActual.setSelection(editTextActual.text.length)
+            }
+        }
     }
 
     private fun ajustarTamañoTexto(editText: EditText, valor: String) {

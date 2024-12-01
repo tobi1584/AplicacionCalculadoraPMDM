@@ -34,5 +34,15 @@ class Conversores : AppCompatActivity() {
             val intent = Intent(this, Area::class.java)
             startActivity(intent)
         }
+
+        conversoresBinding.tiempoImageButton.setOnClickListener {
+            val intent = Intent(this, Tiempo::class.java)
+            startActivity(intent)
+        }
+
+        conversoresBinding.sistemaNumeralImageButton.setOnClickListener {
+            val intent = Intent(this, SistemaNumeral::class.java)
+            startActivity(intent)
+        }
     }
 }

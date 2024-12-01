@@ -155,6 +155,7 @@
                 android:gravity="center">
 
                 <ImageButton
+                    android:id="@+id/tiempoImageButton"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:background="@color/white"
@@ -261,6 +262,7 @@
                 android:gravity="center">
 
                 <ImageButton
+                    android:id="@+id/sistemaNumeralImageButton"
                     android:layout_width="50dp"
                     android:layout_height="35dp"
                     android:background="@color/white"

@@ -17,7 +17,7 @@ import com.example.calculadora.R
 import com.example.calculadora.databinding.LongitudBinding
 import java.text.DecimalFormat
 
-class Area : AppCompatActivity() {
+class Tiempo : AppCompatActivity() {
 
     private var actualizando = false
     private lateinit var longitudBinding: LongitudBinding
@@ -54,9 +54,9 @@ class Area : AppCompatActivity() {
         val selectedOptionTextView2: TextView = findViewById(R.id.seleccion2)
 
         val options = arrayOf(
-            "Kilómetro cuadrado km2", "Héctarea ha", "Área a", "Metro cuadrado m2",
-            "Decímetro cuadrado dm2", "Centímetro cuadrado cm2", "Micrón cuadrado µm2",
-            "Milla cuadrada milla2", "Yarda cuadrada yd2", "Pie cuadrado ft2", "Pulgada cuadrada in2"
+            "Año yr", "Semana sem", "Día d", "Hora h",
+            "Minuto min", "Segundo s", "Milisegundo ms",
+            "Microsegundo µs", "Picosegundo ps"
         )
 
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, options)
@@ -72,7 +72,7 @@ class Area : AppCompatActivity() {
         }
 
         optionsSpinner2.adapter = adapter
-        optionsSpinner2.setSelection(options.indexOf("Metro cuadrado m2"))
+        optionsSpinner2.setSelection(options.indexOf("Segundo s"))
         optionsSpinner2.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 selectedOptionTextView2.text = options[position]
@@ -208,20 +208,18 @@ class Area : AppCompatActivity() {
 
     fun convertirUnidad(unidadOrigen: String, unidadDestino: String, valor: Double): Double {
         val conversionMedidas = mapOf(
-            "Kilómetro cuadrado km2" to 1e6,
-            "Héctarea ha" to 1e4,
-            "Área a" to 100.0,
-            "Metro cuadrado m2" to 1.0,
-            "Decímetro cuadrado dm2" to 0.01,
-            "Centímetro cuadrado cm2" to 0.0001,
-            "Micrón cuadrado µm2" to 1e-12,
-            "Milla cuadrada milla2" to 2.59e6,
-            "Yarda cuadrada yd2" to 0.836127,
-            "Pie cuadrado ft2" to 0.092903,
-            "Pulgada cuadrada in2" to 0.00064516
+            "Año yr" to 3.1536e7,
+            "Semana sem" to 604800.0,
+            "Día d" to 86400.0,
+            "Hora h" to 3600.0,
+            "Minuto min" to 60.0,
+            "Segundo s" to 1.0,
+            "Milisegundo ms" to 0.001,
+            "Microsegundo µs" to 1e-6,
+            "Picosegundo ps" to 1e-12
         )
 
-        val valorEnMetrosCuadrados = valor * (conversionMedidas[unidadOrigen] ?: error("Unidad de origen no válida"))
-        return valorEnMetrosCuadrados / (conversionMedidas[unidadDestino] ?: error("Unidad de destino no válida"))
+        val valorEnSegundos = valor * (conversionMedidas[unidadOrigen] ?: error("Unidad de origen no válida"))
+        return valorEnSegundos / (conversionMedidas[unidadDestino] ?: error("Unidad de destino no válida"))
     }
 }

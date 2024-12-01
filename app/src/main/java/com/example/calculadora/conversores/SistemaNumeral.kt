@@ -15,16 +15,15 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.calculadora.R
 import com.example.calculadora.databinding.LongitudBinding
-import java.text.DecimalFormat
 
-class Area : AppCompatActivity() {
+class SistemaNumeral : AppCompatActivity() {
 
     private var actualizando = false
     private lateinit var longitudBinding: LongitudBinding
     private lateinit var myButtons: Map<Button, String>
     private lateinit var unidadOrigenEditText: EditText
     private lateinit var unidadDestinoEditText: EditText
-    private lateinit var editTextActual: EditText // Declare editTextActual
+    private lateinit var editTextActual: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +32,6 @@ class Area : AppCompatActivity() {
         unidadOrigenEditText = findViewById(R.id.unidadOrigen)
         unidadDestinoEditText = findViewById(R.id.unidadDestino)
 
-        // Initialize editTextActual with one of the EditTexts
         editTextActual = unidadOrigenEditText
 
         unidadOrigenEditText.setOnFocusChangeListener { _, hasFocus ->
@@ -53,11 +51,7 @@ class Area : AppCompatActivity() {
         val optionsSpinner2: Spinner = findViewById(R.id.spinner2)
         val selectedOptionTextView2: TextView = findViewById(R.id.seleccion2)
 
-        val options = arrayOf(
-            "Kilómetro cuadrado km2", "Héctarea ha", "Área a", "Metro cuadrado m2",
-            "Decímetro cuadrado dm2", "Centímetro cuadrado cm2", "Micrón cuadrado µm2",
-            "Milla cuadrada milla2", "Yarda cuadrada yd2", "Pie cuadrado ft2", "Pulgada cuadrada in2"
-        )
+        val options = arrayOf("Binario BIN", "Octal OCT", "Decimal DEC", "Hexadecimal HEX")
 
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, options)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -72,7 +66,7 @@ class Area : AppCompatActivity() {
         }
 
         optionsSpinner2.adapter = adapter
-        optionsSpinner2.setSelection(options.indexOf("Metro cuadrado m2"))
+        optionsSpinner2.setSelection(options.indexOf("Decimal DEC"))
         optionsSpinner2.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 selectedOptionTextView2.text = options[position]
@@ -120,24 +114,27 @@ class Area : AppCompatActivity() {
         unidadOrigenEditText.setOnKeyListener(keyListener)
         unidadDestinoEditText.setOnKeyListener(keyListener)
 
-        // Initialize buttons
         initButtons()
     }
 
     private fun convertirYActualizar(origen: EditText, destino: EditText, spinnerOrigen: Spinner, spinnerDestino: Spinner) {
         if (actualizando) return
 
-        val valor = origen.text.toString().toDoubleOrNull() ?: 0.0
+        val valorTexto = origen.text.toString()
+        if (valorTexto.isEmpty()) {
+            destino.setText("")
+            return
+        }
+
         val unidadOrigen = spinnerOrigen.selectedItem.toString()
         val unidadDestino = spinnerDestino.selectedItem.toString()
-        val resultado = convertirUnidad(unidadOrigen, unidadDestino, valor)
-        val resultadoFormateado = if (resultado % 1 == 0.0) resultado.toLong().toString() else resultado.toString()
+        val resultado = convertirUnidad(unidadOrigen, unidadDestino, valorTexto)
 
         actualizando = true
-        destino.setText(resultadoFormateado)
+        destino.setText(resultado)
 
-        ajustarTamañoTexto(destino, resultadoFormateado)
-        ajustarTamañoTexto(origen, origen.text.toString())
+        ajustarTamañoTexto(destino, resultado)
+        ajustarTamañoTexto(origen, valorTexto)
 
         actualizando = false
     }
@@ -199,29 +196,23 @@ class Area : AppCompatActivity() {
             editText.textSize = tamañoLetra
             ancho = editText.paint.measureText(valor)
         }
-
-        if (tamañoLetra < 15f) {
-            val formato = DecimalFormat("0.###E0")
-            editText.setText(formato.format(valor.toDouble()))
-        }
     }
 
-    fun convertirUnidad(unidadOrigen: String, unidadDestino: String, valor: Double): Double {
-        val conversionMedidas = mapOf(
-            "Kilómetro cuadrado km2" to 1e6,
-            "Héctarea ha" to 1e4,
-            "Área a" to 100.0,
-            "Metro cuadrado m2" to 1.0,
-            "Decímetro cuadrado dm2" to 0.01,
-            "Centímetro cuadrado cm2" to 0.0001,
-            "Micrón cuadrado µm2" to 1e-12,
-            "Milla cuadrada milla2" to 2.59e6,
-            "Yarda cuadrada yd2" to 0.836127,
-            "Pie cuadrado ft2" to 0.092903,
-            "Pulgada cuadrada in2" to 0.00064516
-        )
+    fun convertirUnidad(unidadOrigen: String, unidadDestino: String, valor: String): String {
+        val decimalValue = when (unidadOrigen) {
+            "Binario BIN" -> valor.toLong(2)
+            "Octal OCT" -> valor.toLong(8)
+            "Decimal DEC" -> valor.toLong(10)
+            "Hexadecimal HEX" -> valor.toLong(16)
+            else -> error("Unidad de origen no válida")
+        }
 
-        val valorEnMetrosCuadrados = valor * (conversionMedidas[unidadOrigen] ?: error("Unidad de origen no válida"))
-        return valorEnMetrosCuadrados / (conversionMedidas[unidadDestino] ?: error("Unidad de destino no válida"))
+        return when (unidadDestino) {
+            "Binario BIN" -> decimalValue.toString(2)
+            "Octal OCT" -> decimalValue.toString(8)
+            "Decimal DEC" -> decimalValue.toString(10)
+            "Hexadecimal HEX" -> decimalValue.toString(16)
+            else -> error("Unidad de destino no válida")
+        }
     }
 }
