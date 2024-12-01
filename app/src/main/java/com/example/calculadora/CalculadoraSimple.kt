@@ -8,11 +8,16 @@ import android.os.Bundle
 import android.view.Gravity
 import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.GridLayout
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.PopupMenu
+import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.marginLeft
 import androidx.core.view.marginTop
 import com.example.calculadora.databinding.CalculadoraSimpleBinding
 import java.text.SimpleDateFormat
@@ -128,7 +133,7 @@ class CalculadoraSimple : AppCompatActivity() {
                         true
                     }
                     2 -> {
-                        Toast.makeText(this, "Magnitudes seleccionadas", Toast.LENGTH_SHORT).show()
+                        mostrarMagnitudes()
                         true
                     }
                     else -> false
@@ -138,6 +143,85 @@ class CalculadoraSimple : AppCompatActivity() {
         }
     }
 
+    private fun mostrarMagnitudes() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Magnitudes")
+
+        val scrollView = ScrollView(this)
+        val layout = GridLayout(this)
+        layout.rowCount = 5
+        layout.columnCount = 2
+
+        val constants = listOf(
+            Triple("π (Pi)", "\u03C0", Math.PI),
+            Triple("e (Número de Euler)", "e", Math.E),
+            Triple("√2 (Raíz cuadrada de 2)", "√2", Math.sqrt(2.0)),
+            Triple("Φ (Número áureo)", "\u03A6", 1.61803),
+            Triple("γ (Constante de Euler-Mascheroni)", "\u03B3", 0.57721),
+            Triple("ln(2) (Logaritmo natural de 2)", "ln(2)", Math.log(2.0)),
+            Triple("ln(10) (Logaritmo natural de 10)", "ln(10)", Math.log(10.0)),
+            Triple("c (Velocidad de la luz en el vacío)", "c", 299792458.0),
+            Triple("G (Constante gravitacional)", "G", 6.67430e-11),
+            Triple("h (Constante de Planck)", "h", 6.62607e-34)
+        )
+
+        lateinit var dialog: AlertDialog // Declarar la variable antes
+
+        for ((name, symbol, value) in constants) {
+            val imageView = ImageView(this)
+            imageView.setImageResource(getImageResourceByName(symbol))
+            val paramsImage = GridLayout.LayoutParams()
+            paramsImage.width = 200
+            paramsImage.height = 200
+            paramsImage.setMargins(50, 70, 0, 0)
+            imageView.layoutParams = paramsImage
+
+            val textView = TextView(this)
+            textView.text = name
+            textView.gravity = Gravity.CENTER
+            val paramsText = GridLayout.LayoutParams()
+            paramsText.width = GridLayout.LayoutParams.WRAP_CONTENT
+            paramsText.height = GridLayout.LayoutParams.WRAP_CONTENT
+            paramsText.setMargins(50, 100, 0, 0)
+            textView.layoutParams = paramsText
+
+            val clickListener = {
+                binding.mainEditText.append(symbol)
+                lista.add(value.toString())
+                dialog.dismiss() // Cerrar el diálogo
+            }
+
+            imageView.setOnClickListener { clickListener() }
+            textView.setOnClickListener { clickListener() }
+
+            layout.addView(imageView)
+            layout.addView(textView)
+        }
+
+        scrollView.addView(layout)
+        builder.setView(scrollView)
+
+        dialog = builder.create() // Crear el diálogo aquí
+        dialog.show()
+    }
+
+
+
+    private fun getImageResourceByName(name: String): Int {
+        return when (name) {
+            "\u03C0" -> com.example.calculadora.R.drawable.pi_image
+            "e" -> com.example.calculadora.R.drawable.e_image
+            "√2" -> com.example.calculadora.R.drawable.sqrt2_image
+            "\u03A6" -> com.example.calculadora.R.drawable.phi_image
+            "\u03B3" -> com.example.calculadora.R.drawable.gamma_image
+            "ln(2)" -> com.example.calculadora.R.drawable.ln2_image
+            "ln(10)" -> com.example.calculadora.R.drawable.ln10_image
+            "c" -> com.example.calculadora.R.drawable.c_image
+            "G" -> com.example.calculadora.R.drawable.g_image
+            "h" -> com.example.calculadora.R.drawable.h_image
+            else -> 0
+        }
+    }
     private fun mostrarHistorial() {
         val db = dbHelper.readableDatabase
         val cursor = db.rawQuery("SELECT * FROM historial", null)
