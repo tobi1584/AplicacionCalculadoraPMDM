@@ -13,6 +13,7 @@ import android.widget.ImageButton
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import com.example.calculadora.R
 import com.example.calculadora.databinding.LongitudBinding
 
@@ -37,12 +38,14 @@ class SistemaNumeral : AppCompatActivity() {
         unidadOrigenEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 editTextActual = unidadOrigenEditText
+                actualizarEstadoBotones()
             }
         }
 
         unidadDestinoEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 editTextActual = unidadDestinoEditText
+                actualizarEstadoBotones()
             }
         }
 
@@ -61,6 +64,7 @@ class SistemaNumeral : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 selectedOptionTextView.text = options[position]
                 convertirYActualizar(unidadOrigenEditText, unidadDestinoEditText, optionsSpinner, optionsSpinner2)
+                actualizarEstadoBotones()
             }
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
@@ -71,6 +75,7 @@ class SistemaNumeral : AppCompatActivity() {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 selectedOptionTextView2.text = options[position]
                 convertirYActualizar(unidadOrigenEditText, unidadDestinoEditText, optionsSpinner, optionsSpinner2)
+                actualizarEstadoBotones()
             }
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
@@ -120,9 +125,11 @@ class SistemaNumeral : AppCompatActivity() {
     private fun convertirYActualizar(origen: EditText, destino: EditText, spinnerOrigen: Spinner, spinnerDestino: Spinner) {
         if (actualizando) return
 
-        val valorTexto = origen.text.toString()
+        val valorTexto = origen.text.toString().trim()
         if (valorTexto.isEmpty()) {
+            actualizando = true
             destino.setText("")
+            actualizando = false
             return
         }
 
@@ -132,15 +139,15 @@ class SistemaNumeral : AppCompatActivity() {
 
         actualizando = true
         destino.setText(resultado)
-
         ajustarTamañoTexto(destino, resultado)
         ajustarTamañoTexto(origen, valorTexto)
-
         actualizando = false
     }
 
+
     private fun initButtons() {
         myButtons = mapOf(
+            findViewById<Button>(R.id.number00) to "00",
             findViewById<Button>(R.id.number0) to "0",
             findViewById<Button>(R.id.number1) to "1",
             findViewById<Button>(R.id.number2) to "2",
@@ -179,6 +186,21 @@ class SistemaNumeral : AppCompatActivity() {
         }
     }
 
+    private fun actualizarEstadoBotones() {
+        val isBinario = (findViewById<Spinner>(R.id.spinner1).selectedItem.toString() == "Binario BIN" && editTextActual == unidadOrigenEditText) ||
+                (findViewById<Spinner>(R.id.spinner2).selectedItem.toString() == "Binario BIN" && editTextActual == unidadDestinoEditText)
+
+        myButtons.forEach { (button, value) ->
+            if (isBinario && value != "0" && value != "1" && value != "00") {
+                button.isEnabled = false
+                button.setTextColor(ContextCompat.getColor(this, R.color.orangeDisabled))
+            } else {
+                button.isEnabled = true
+                button.setTextColor(ContextCompat.getColor(this, R.color.black))
+            }
+        }
+    }
+
     private fun ajustarTamañoTexto(editText: EditText, valor: String) {
         var tamañoLetra = 25f
         editText.textSize = tamañoLetra
@@ -199,20 +221,29 @@ class SistemaNumeral : AppCompatActivity() {
     }
 
     fun convertirUnidad(unidadOrigen: String, unidadDestino: String, valor: String): String {
-        val decimalValue = when (unidadOrigen) {
-            "Binario BIN" -> valor.toLong(2)
-            "Octal OCT" -> valor.toLong(8)
-            "Decimal DEC" -> valor.toLong(10)
-            "Hexadecimal HEX" -> valor.toLong(16)
-            else -> error("Unidad de origen no válida")
+        if (valor.isBlank()) {
+            return ""
         }
 
-        return when (unidadDestino) {
-            "Binario BIN" -> decimalValue.toString(2)
-            "Octal OCT" -> decimalValue.toString(8)
-            "Decimal DEC" -> decimalValue.toString(10)
-            "Hexadecimal HEX" -> decimalValue.toString(16)
-            else -> error("Unidad de destino no válida")
+        return try {
+            val decimalValue = when (unidadOrigen) {
+                "Binario BIN" -> valor.toLong(2)
+                "Octal OCT" -> valor.toLong(8)
+                "Decimal DEC" -> valor.toLong(10)
+                "Hexadecimal HEX" -> valor.toLong(16)
+                else -> error("Unidad de origen no válida")
+            }
+
+            when (unidadDestino) {
+                "Binario BIN" -> decimalValue.toString(2)
+                "Octal OCT" -> decimalValue.toString(8)
+                "Decimal DEC" -> decimalValue.toString(10)
+                "Hexadecimal HEX" -> decimalValue.toString(16)
+                else -> error("Unidad de destino no válida")
+            }
+        } catch (e: NumberFormatException) {
+            ""
         }
     }
+
 }

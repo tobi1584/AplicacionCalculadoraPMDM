@@ -15,9 +15,8 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.calculadora.R
 import com.example.calculadora.databinding.LongitudBinding
-import java.text.DecimalFormat
 
-class Longitud : AppCompatActivity() {
+class Temperatura : AppCompatActivity() {
 
     private var actualizando = false
     private lateinit var longitudBinding: LongitudBinding
@@ -52,10 +51,7 @@ class Longitud : AppCompatActivity() {
         val optionsSpinner2: Spinner = findViewById(R.id.spinner2)
         val selectedOptionTextView2: TextView = findViewById(R.id.seleccion2)
 
-        val options = arrayOf("Kilómetro km", "Metro m", "Decímetro dm", "Centímetro cm",
-            "Milímetro mm", "Micrómetro µm", "Nanómetro nm", "Picómetro pm", "Milla náutica nmi",
-            "Milla mi", "Yarda yd", "Pie ft", "Pulgada in", "Pársec pc", "Distancia lunar ld",
-            "Unidad astronómica ua", "Año luz ly")
+        val options = arrayOf("Celsius Cº", "Fahrenheit ºF", "Kelvin K", "Rankine ºR", "Réaumur ºRe")
 
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, options)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
@@ -70,7 +66,7 @@ class Longitud : AppCompatActivity() {
         }
 
         optionsSpinner2.adapter = adapter
-        optionsSpinner2.setSelection(options.indexOf("Metro m"))
+        optionsSpinner2.setSelection(options.indexOf("Celsius Cº"))
         optionsSpinner2.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 selectedOptionTextView2.text = options[position]
@@ -79,7 +75,7 @@ class Longitud : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
-        unidadOrigenEditText.setText("1")
+        unidadOrigenEditText.setText("0")
         unidadOrigenEditText.setSelection(1)
 
         unidadOrigenEditText.addTextChangedListener(object : TextWatcher {
@@ -118,31 +114,31 @@ class Longitud : AppCompatActivity() {
         unidadOrigenEditText.setOnKeyListener(keyListener)
         unidadDestinoEditText.setOnKeyListener(keyListener)
 
-        // Initialize buttons
         initButtons()
     }
 
     private fun convertirYActualizar(origen: EditText, destino: EditText, spinnerOrigen: Spinner, spinnerDestino: Spinner) {
         if (actualizando) return
 
-        val valor = origen.text.toString().toDoubleOrNull() ?: 0.0
+        val valorTexto = origen.text.toString().trim()
+        if (valorTexto.isEmpty()) {
+            actualizando = true
+            destino.setText("")
+            actualizando = false
+            return
+        }
+
         val unidadOrigen = spinnerOrigen.selectedItem.toString()
         val unidadDestino = spinnerDestino.selectedItem.toString()
-        val resultado = convertirUnidad(unidadOrigen, unidadDestino, valor)
-        val resultadoFormateado = if (resultado % 1 == 0.0) resultado.toLong().toString() else resultado.toString()
+        val resultado = convertirUnidad(unidadOrigen, unidadDestino, valorTexto.toDouble())
 
         actualizando = true
-        destino.setText(resultadoFormateado)
-
-        ajustarTamañoTexto(destino, resultadoFormateado)
-        ajustarTamañoTexto(origen, origen.text.toString())
-
+        destino.setText(resultado.toString())
         actualizando = false
     }
 
     private fun initButtons() {
         myButtons = mapOf(
-            findViewById<Button>(R.id.number00) to "00",
             findViewById<Button>(R.id.number0) to "0",
             findViewById<Button>(R.id.number1) to "1",
             findViewById<Button>(R.id.number2) to "2",
@@ -181,52 +177,23 @@ class Longitud : AppCompatActivity() {
         }
     }
 
-    private fun ajustarTamañoTexto(editText: EditText, valor: String) {
-        var tamañoLetra = 25f
-        editText.textSize = tamañoLetra
-        var ancho = editText.paint.measureText(valor)
-        val anchoEditText = editText.width - editText.paddingLeft - editText.paddingRight
-
-        while (ancho > anchoEditText && tamañoLetra > 15f) {
-            tamañoLetra -= 1f
-            editText.textSize = tamañoLetra
-            ancho = editText.paint.measureText(valor)
+    private fun convertirUnidad(unidadOrigen: String, unidadDestino: String, valor: Double): Double {
+        val celsius = when (unidadOrigen) {
+            "Celsius Cº" -> valor
+            "Fahrenheit ºF" -> (valor - 32) * 5 / 9
+            "Kelvin K" -> valor - 273.15
+            "Rankine ºR" -> (valor - 491.67) * 5 / 9
+            "Réaumur ºRe" -> valor * 5 / 4
+            else -> throw IllegalArgumentException("Unidad de origen no válida")
         }
 
-        while (ancho < anchoEditText && tamañoLetra < 25f) {
-            tamañoLetra += 1f
-            editText.textSize = tamañoLetra
-            ancho = editText.paint.measureText(valor)
+        return when (unidadDestino) {
+            "Celsius Cº" -> celsius
+            "Fahrenheit ºF" -> celsius * 9 / 5 + 32
+            "Kelvin K" -> celsius + 273.15
+            "Rankine ºR" -> celsius * 9 / 5 + 491.67
+            "Réaumur ºRe" -> celsius * 4 / 5
+            else -> throw IllegalArgumentException("Unidad de destino no válida")
         }
-
-        if (tamañoLetra < 15f) {
-            val formato = DecimalFormat("0.###E0")
-            editText.setText(formato.format(valor.toDouble()))
-        }
-    }
-
-    fun convertirUnidad(unidadOrigen: String, unidadDestino: String, valor: Double): Double {
-        val conversionMedidas = mapOf(
-            "Kilómetro km" to 1000.0,
-            "Metro m" to 1.0,
-            "Decímetro dm" to 0.1,
-            "Centímetro cm" to 0.01,
-            "Milímetro mm" to 0.001,
-            "Micrómetro µm" to 1e-6,
-            "Nanómetro nm" to 1e-9,
-            "Picómetro pm" to 1e-12,
-            "Milla náutica nmi" to 1852.0,
-            "Milla mi" to 1609.34,
-            "Yarda yd" to 0.9144,
-            "Pie ft" to 0.3048,
-            "Pulgada in" to 0.0254,
-            "Pársec pc" to 3.0857e16,
-            "Distancia lunar ld" to 3.844e8,
-            "Unidad astronómica ua" to 1.496e11,
-            "Año luz ly" to 9.461e15
-        )
-
-        val valorEnMetros = valor * (conversionMedidas[unidadOrigen] ?: error("Unidad de origen no válida"))
-        return valorEnMetros / (conversionMedidas[unidadDestino] ?: error("Unidad de destino no válida"))
     }
 }

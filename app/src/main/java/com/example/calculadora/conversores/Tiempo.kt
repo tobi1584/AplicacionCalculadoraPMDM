@@ -120,7 +120,6 @@ class Tiempo : AppCompatActivity() {
         unidadOrigenEditText.setOnKeyListener(keyListener)
         unidadDestinoEditText.setOnKeyListener(keyListener)
 
-        // Initialize buttons
         initButtons()
     }
 
@@ -144,6 +143,7 @@ class Tiempo : AppCompatActivity() {
 
     private fun initButtons() {
         myButtons = mapOf(
+            findViewById<Button>(R.id.number00) to "00",
             findViewById<Button>(R.id.number0) to "0",
             findViewById<Button>(R.id.number1) to "1",
             findViewById<Button>(R.id.number2) to "2",

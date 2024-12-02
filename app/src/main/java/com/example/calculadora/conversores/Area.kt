@@ -1,5 +1,6 @@
 package com.example.calculadora.conversores
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,6 +14,7 @@ import android.widget.ImageButton
 import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.example.calculadora.CalculadoraSimple
 import com.example.calculadora.R
 import com.example.calculadora.databinding.LongitudBinding
 import java.text.DecimalFormat
@@ -20,11 +22,10 @@ import java.text.DecimalFormat
 class Area : AppCompatActivity() {
 
     private var actualizando = false
-    private lateinit var longitudBinding: LongitudBinding
     private lateinit var myButtons: Map<Button, String>
     private lateinit var unidadOrigenEditText: EditText
     private lateinit var unidadDestinoEditText: EditText
-    private lateinit var editTextActual: EditText // Declare editTextActual
+    private lateinit var editTextActual: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,7 +34,6 @@ class Area : AppCompatActivity() {
         unidadOrigenEditText = findViewById(R.id.unidadOrigen)
         unidadDestinoEditText = findViewById(R.id.unidadDestino)
 
-        // Initialize editTextActual with one of the EditTexts
         editTextActual = unidadOrigenEditText
 
         unidadOrigenEditText.setOnFocusChangeListener { _, hasFocus ->
@@ -120,8 +120,17 @@ class Area : AppCompatActivity() {
         unidadOrigenEditText.setOnKeyListener(keyListener)
         unidadDestinoEditText.setOnKeyListener(keyListener)
 
-        // Initialize buttons
         initButtons()
+
+        findViewById<Button>(R.id.ConversorTextView).setOnClickListener {
+            val intent = Intent(this, Conversores::class.java)
+            startActivity(intent)
+        }
+
+        findViewById<Button>(R.id.CalculadoraTextView).setOnClickListener {
+            val intent = Intent(this, CalculadoraSimple::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun convertirYActualizar(origen: EditText, destino: EditText, spinnerOrigen: Spinner, spinnerDestino: Spinner) {
@@ -143,7 +152,9 @@ class Area : AppCompatActivity() {
     }
 
     private fun initButtons() {
+
         myButtons = mapOf(
+            findViewById<Button>(R.id.number00) to "00",
             findViewById<Button>(R.id.number0) to "0",
             findViewById<Button>(R.id.number1) to "1",
             findViewById<Button>(R.id.number2) to "2",

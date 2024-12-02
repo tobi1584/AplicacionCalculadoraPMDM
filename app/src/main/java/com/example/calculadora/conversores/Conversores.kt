@@ -44,5 +44,10 @@ class Conversores : AppCompatActivity() {
             val intent = Intent(this, SistemaNumeral::class.java)
             startActivity(intent)
         }
+
+        conversoresBinding.temperaturaImageButton.setOnClickListener {
+            val intent = Intent(this, Temperatura::class.java)
+            startActivity(intent)
+        }
     }
 }
