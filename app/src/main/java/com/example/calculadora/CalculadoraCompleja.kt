@@ -22,6 +22,7 @@ import com.example.calculadora.databinding.CalculadoraComplejaBinding
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.math.ln
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -33,6 +34,7 @@ class CalculadoraCompleja : AppCompatActivity() {
     private lateinit var myButtons: Map<Button, String>
     private var resultadoCalculado = false
     private lateinit var dbHelper: SQLite
+
 
     // Función que se ejecuta al crear la actividad
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,6 +49,8 @@ class CalculadoraCompleja : AppCompatActivity() {
         setContentView(binding.root)
         initComponent()
         initListeners()
+        dbHelper = SQLite(this, "CalculadoraDB", null, 1)
+
 
         // Inicializar la base de datos y realizar una operación de lectura
         val db = dbHelper.readableDatabase
@@ -374,89 +378,93 @@ class CalculadoraCompleja : AppCompatActivity() {
                 Toast.makeText(this, "Error: Entrada inválida", Toast.LENGTH_LONG).show()
             }
         }
+
+        binding.othersImageButton2.setOnClickListener {
+            val popupMenu = PopupMenu(this, it)
+            popupMenu.menu.add(0, 1, 0, "Historial")
+            popupMenu.menu.add(0, 2, 1, "Magnitudes")
+            popupMenu.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    1 -> {
+                        mostrarHistorial()
+                        Toast.makeText(this, "Historial seleccionado", Toast.LENGTH_SHORT).show()
+                        true
+                    }
+                    2 -> {
+                        mostrarMagnitudes()
+                        true
+                    }
+                    else -> false
+                }
+            }
+            popupMenu.show()
+        }
     }
 
-
-    // Función que se ejecuta al destruir la actividad
     private fun mostrarMagnitudes() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Magnitudes")
 
-        // Crear un ScrollView y un GridLayout
         val scrollView = ScrollView(this)
         val layout = GridLayout(this)
         layout.rowCount = 5
         layout.columnCount = 2
 
-        // Crear una lista de constantes
         val constants = listOf(
             Triple("π (Pi)", "\u03C0", Math.PI),
             Triple("e (Número de Euler)", "e", Math.E),
-            Triple("√2 (Raíz cuadrada de 2)", "√2", Math.sqrt(2.0)),
+            Triple("√2 (Raíz cuadrada de 2)", "√2", sqrt(2.0)),
             Triple("Φ (Número áureo)", "\u03A6", 1.61803),
             Triple("γ (Constante de Euler-Mascheroni)", "\u03B3", 0.57721),
-            Triple("ln(2) (Logaritmo natural de 2)", "ln(2)", Math.log(2.0)),
-            Triple("ln(10) (Logaritmo natural de 10)", "ln(10)", Math.log(10.0)),
+            Triple("ln(2) (Logaritmo natural de 2)", "ln(2)", ln(2.0)),
+            Triple("ln(10) (Logaritmo natural de 10)", "ln(10)", ln(10.0)),
             Triple("c (Velocidad de la luz en el vacío)", "c", 299792458.0),
             Triple("G (Constante gravitacional)", "G", 6.67430e-11),
             Triple("h (Constante de Planck)", "h", 6.62607e-34)
         )
 
-        // Crear un diálogo y una variable para el diálogo
         lateinit var dialog: AlertDialog // Declarar la variable antes
 
-        // Recorrer la lista de constantes
         for ((name, symbol, value) in constants) {
-            // Crear un ImageView y un TextView
             val imageView = ImageView(this)
             imageView.setImageResource(getImageResourceByName(symbol))
             val paramsImage = GridLayout.LayoutParams()
-
-            // Establecer los parámetros de la imagen
             paramsImage.width = 200
             paramsImage.height = 200
             paramsImage.setMargins(50, 70, 0, 0)
             imageView.layoutParams = paramsImage
 
-            // Crear un TextView
             val textView = TextView(this)
             textView.text = name
             textView.gravity = Gravity.CENTER
             val paramsText = GridLayout.LayoutParams()
-
-            // Establecer los parámetros del texto
             paramsText.width = GridLayout.LayoutParams.WRAP_CONTENT
             paramsText.height = GridLayout.LayoutParams.WRAP_CONTENT
             paramsText.setMargins(50, 100, 0, 0)
             textView.layoutParams = paramsText
 
-            // Crear un listener para los elementos
             val clickListener = {
-                // Obtener el texto actual del EditText
-                val currentText = binding.editText.text.toString()
-                // Verificar si el texto actual es un número
-                if (currentText.toDoubleOrNull() != null) { // Si el texto es un número
-                    binding.editText.setText(symbol)
-                    lista.clear()
-                    lista.add(value.toString())
-                } else { // Si el texto no es un número
+                val lastChar = binding.editText.text.lastOrNull()
+                if (lastChar in setOf('+', '-', '/', 'x') || binding.editText.text.isEmpty()) {
                     binding.editText.append(symbol)
                     lista.add(value.toString())
+                    dialog.dismiss() // Cerrar el diálogo
+                } else {
+                    lista.clear()
+                    binding.editText.setText(symbol)
+                    lista.add(value.toString())
+                    dialog.dismiss() // Cerrar el diálogo
+
                 }
-                // Cerrar el diálogo
-                dialog.dismiss()
             }
 
-            // Asignar un listener a los elementos
             imageView.setOnClickListener { clickListener() }
             textView.setOnClickListener { clickListener() }
 
-            // Agregar los elementos al layout
             layout.addView(imageView)
             layout.addView(textView)
         }
 
-        // Agregar el layout al ScrollView
         scrollView.addView(layout)
         builder.setView(scrollView)
 
@@ -466,68 +474,54 @@ class CalculadoraCompleja : AppCompatActivity() {
 
 
 
-    // Función que se ejecuta al destruir la actividad
     private fun getImageResourceByName(name: String): Int {
         return when (name) {
-            "\u03C0" -> com.example.calculadora.R.drawable.pi_image
-            "e" -> com.example.calculadora.R.drawable.e_image
-            "√2" -> com.example.calculadora.R.drawable.sqrt2_image
-            "\u03A6" -> com.example.calculadora.R.drawable.phi_image
-            "\u03B3" -> com.example.calculadora.R.drawable.gamma_image
-            "ln(2)" -> com.example.calculadora.R.drawable.ln2_image
-            "ln(10)" -> com.example.calculadora.R.drawable.ln10_image
-            "c" -> com.example.calculadora.R.drawable.c_image
-            "G" -> com.example.calculadora.R.drawable.g_image
-            "h" -> com.example.calculadora.R.drawable.h_image
+            "\u03C0" -> R.drawable.pi_image
+            "e" -> R.drawable.e_image
+            "√2" -> R.drawable.sqrt2_image
+            "\u03A6" -> R.drawable.phi_image
+            "\u03B3" -> R.drawable.gamma_image
+            "ln(2)" -> R.drawable.ln2_image
+            "ln(10)" -> R.drawable.ln10_image
+            "c" -> R.drawable.c_image
+            "G" -> R.drawable.g_image
+            "h" -> R.drawable.h_image
             else -> 0
         }
     }
-
-    // Función que se ejecuta al destruir la actividad
     private fun mostrarHistorial() {
-        // Crear un diálogo de alerta
         val db = dbHelper.readableDatabase
         val cursor = db.rawQuery("SELECT * FROM historial", null)
         val registros = ArrayList<String>()
 
-        // Recorrer los registros de la base de datos
         if (cursor.moveToFirst()) {
-            // Recorrer los registros de la base de datos
             do {
-                // Obtener los valores de la base de datos
                 val operacion = cursor.getString(cursor.getColumnIndexOrThrow("operacion"))
                 val resultado = cursor.getString(cursor.getColumnIndexOrThrow("resultado"))
                 val fecha = cursor.getString(cursor.getColumnIndexOrThrow("fecha"))
                 registros.add("\n$fecha \n $operacion = $resultado \n")
-            } while (cursor.moveToNext()) // Mientras haya registros
+            } while (cursor.moveToNext())
         }
-
-        // Cerrar la base de datos
         cursor.close()
         db.close()
 
-        // Crear un diálogo de alerta
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Historial")
 
-        // Verificar si no hay registros
         if (registros.isEmpty()) {
-            // Mostrar un mensaje si no hay registros
             val textView = TextView(this)
             textView.text = "No hay registros todavía"
             textView.textSize = 20f
             textView.gravity = Gravity.CENTER
             textView.height = 200
             builder.setView(textView)
-        } else { // Si hay registros
-            // Crear un ListView y un ArrayAdapter
+        } else {
             val listView = ListView(this)
             val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, registros)
             listView.adapter = adapter
             builder.setView(listView)
         }
 
-        // Agregar botones al diálogo
         builder.setPositiveButton("Cerrar") { dialog, _ -> dialog.dismiss() }
         builder.setNegativeButton("Borrar Historial") { dialog, _ ->
             borrarHistorial()
@@ -536,7 +530,6 @@ class CalculadoraCompleja : AppCompatActivity() {
         builder.create().show()
     }
 
-    // Función que se ejecuta al destruir la actividad
     private fun borrarHistorial() {
         val db = dbHelper.writableDatabase
         db.delete("historial", null, null)
@@ -545,7 +538,6 @@ class CalculadoraCompleja : AppCompatActivity() {
     }
 
 
-    // Función que se ejecuta al destruir la actividad
     private fun anadirLogaritmo(num: String) {
         try {
             // Convertir el número a Double
@@ -991,20 +983,6 @@ class CalculadoraCompleja : AppCompatActivity() {
 
         // Calcular el resultado
         val resultado = calculo(lista)
-
-
-        // Guardar el resultado en la base de datos
-        val db = dbHelper.writableDatabase
-        val values = ContentValues().apply {
-            put("operacion", binding.editText.text.toString())
-            put("fecha", SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date()))
-            put("resultado", resultado.toString())
-        }
-        db.insert("historial", null, values)
-        db.close()
-
-
-        // Limpiar la lista y agregar el resultado
         lista.clear()
         lista.add(resultado.toString())
 
@@ -1020,8 +998,17 @@ class CalculadoraCompleja : AppCompatActivity() {
             resultadoFinal = resultado.toString()
         }
 
-        // Mostrar el resultado en el EditText
+
+        val db = dbHelper.writableDatabase
+        val values = ContentValues().apply {
+            put("operacion", binding.editText.text.toString())
+            put("fecha", SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date()))
+            put("resultado", resultado.toString())
+        }
+        db.insert("historial", null, values)
+        db.close()
         binding.editText.setText(resultadoFinal)
+
         resultadoCalculado = true
     }
 
