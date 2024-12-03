@@ -1,13 +1,26 @@
 package com.example.calculadora
 
+import android.app.AlertDialog
+import android.content.ContentValues
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
+import android.view.Gravity
+import android.widget.ArrayAdapter
 import android.widget.Button
+import android.widget.GridLayout
+import android.widget.ImageView
+import android.widget.ListView
+import android.widget.PopupMenu
+import android.widget.ScrollView
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.calculadora.databinding.CalculadoraComplejaBinding
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 import kotlin.math.pow
 import kotlin.math.sqrt
 
@@ -17,13 +30,29 @@ class CalculadoraCompleja : AppCompatActivity() {
     private val lista = ArrayList<String>()
     private lateinit var myButtons: Map<Button, String>
     private var resultadoCalculado = false
+    private lateinit var dbHelper: SQLite
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = CalculadoraComplejaBinding.inflate(layoutInflater)
+
+        dbHelper = SQLite(this, "CalculadoraDB", null, 1)
+
         setContentView(binding.root)
         initComponent()
         initListeners()
+
+        // Inicializar la base de datos y realizar una operación de lectura
+        val db = dbHelper.readableDatabase
+        db.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null).use { cursor ->
+            if (cursor.moveToFirst()) {
+                do {
+                    val tableName = cursor.getString(0)
+                    println("Table: $tableName")
+                } while (cursor.moveToNext())
+            }
+        }
+        db.close()
     }
     private fun initComponent() {
         myButtons = mapOf(
@@ -98,6 +127,28 @@ class CalculadoraCompleja : AppCompatActivity() {
                     }
                 }
             }
+        }
+
+
+        binding.othersImageButton2.setOnClickListener {
+            val popupMenu = PopupMenu(this, it)
+            popupMenu.menu.add(0, 1, 0, "Historial")
+            popupMenu.menu.add(0, 2, 1, "Magnitudes")
+            popupMenu.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    1 -> {
+                        mostrarHistorial()
+                        Toast.makeText(this, "Historial seleccionado", Toast.LENGTH_SHORT).show()
+                        true
+                    }
+                    2 -> {
+                        mostrarMagnitudes()
+                        true
+                    }
+                    else -> false
+                }
+            }
+            popupMenu.show()
         }
 
 
@@ -238,6 +289,141 @@ class CalculadoraCompleja : AppCompatActivity() {
                 Toast.makeText(this, "Error: Entrada inválida", Toast.LENGTH_LONG).show()
             }
         }
+    }
+
+
+    private fun mostrarMagnitudes() {
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Magnitudes")
+
+        val scrollView = ScrollView(this)
+        val layout = GridLayout(this)
+        layout.rowCount = 5
+        layout.columnCount = 2
+
+        val constants = listOf(
+            Triple("π (Pi)", "\u03C0", Math.PI),
+            Triple("e (Número de Euler)", "e", Math.E),
+            Triple("√2 (Raíz cuadrada de 2)", "√2", Math.sqrt(2.0)),
+            Triple("Φ (Número áureo)", "\u03A6", 1.61803),
+            Triple("γ (Constante de Euler-Mascheroni)", "\u03B3", 0.57721),
+            Triple("ln(2) (Logaritmo natural de 2)", "ln(2)", Math.log(2.0)),
+            Triple("ln(10) (Logaritmo natural de 10)", "ln(10)", Math.log(10.0)),
+            Triple("c (Velocidad de la luz en el vacío)", "c", 299792458.0),
+            Triple("G (Constante gravitacional)", "G", 6.67430e-11),
+            Triple("h (Constante de Planck)", "h", 6.62607e-34)
+        )
+
+        lateinit var dialog: AlertDialog // Declarar la variable antes
+
+        for ((name, symbol, value) in constants) {
+            val imageView = ImageView(this)
+            imageView.setImageResource(getImageResourceByName(symbol))
+            val paramsImage = GridLayout.LayoutParams()
+            paramsImage.width = 200
+            paramsImage.height = 200
+            paramsImage.setMargins(50, 70, 0, 0)
+            imageView.layoutParams = paramsImage
+
+            val textView = TextView(this)
+            textView.text = name
+            textView.gravity = Gravity.CENTER
+            val paramsText = GridLayout.LayoutParams()
+            paramsText.width = GridLayout.LayoutParams.WRAP_CONTENT
+            paramsText.height = GridLayout.LayoutParams.WRAP_CONTENT
+            paramsText.setMargins(50, 100, 0, 0)
+            textView.layoutParams = paramsText
+
+            val clickListener = {
+                val currentText = binding.editText.text.toString()
+                if (currentText.toDoubleOrNull() != null) {
+                    binding.editText.setText(symbol)
+                    lista.clear()
+                    lista.add(value.toString())
+                } else {
+                    binding.editText.append(symbol)
+                    lista.add(value.toString())
+                }
+                dialog.dismiss()
+            }
+
+            imageView.setOnClickListener { clickListener() }
+            textView.setOnClickListener { clickListener() }
+
+            layout.addView(imageView)
+            layout.addView(textView)
+        }
+
+        scrollView.addView(layout)
+        builder.setView(scrollView)
+
+        dialog = builder.create() // Crear el diálogo aquí
+        dialog.show()
+    }
+
+
+
+    private fun getImageResourceByName(name: String): Int {
+        return when (name) {
+            "\u03C0" -> com.example.calculadora.R.drawable.pi_image
+            "e" -> com.example.calculadora.R.drawable.e_image
+            "√2" -> com.example.calculadora.R.drawable.sqrt2_image
+            "\u03A6" -> com.example.calculadora.R.drawable.phi_image
+            "\u03B3" -> com.example.calculadora.R.drawable.gamma_image
+            "ln(2)" -> com.example.calculadora.R.drawable.ln2_image
+            "ln(10)" -> com.example.calculadora.R.drawable.ln10_image
+            "c" -> com.example.calculadora.R.drawable.c_image
+            "G" -> com.example.calculadora.R.drawable.g_image
+            "h" -> com.example.calculadora.R.drawable.h_image
+            else -> 0
+        }
+    }
+    private fun mostrarHistorial() {
+        val db = dbHelper.readableDatabase
+        val cursor = db.rawQuery("SELECT * FROM historial", null)
+        val registros = ArrayList<String>()
+
+        if (cursor.moveToFirst()) {
+            do {
+                val operacion = cursor.getString(cursor.getColumnIndexOrThrow("operacion"))
+                val resultado = cursor.getString(cursor.getColumnIndexOrThrow("resultado"))
+                val fecha = cursor.getString(cursor.getColumnIndexOrThrow("fecha"))
+                registros.add("\n$fecha \n $operacion = $resultado \n")
+            } while (cursor.moveToNext())
+        }
+        cursor.close()
+        db.close()
+
+        val builder = AlertDialog.Builder(this)
+        builder.setTitle("Historial")
+
+        if (registros.isEmpty()) {
+            val textView = TextView(this)
+            textView.text = "No hay registros todavía"
+            textView.textSize = 20f
+            textView.gravity = Gravity.CENTER
+            textView.height = 200
+            builder.setView(textView)
+        } else {
+            val listView = ListView(this)
+            val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_1, registros)
+            listView.adapter = adapter
+            builder.setView(listView)
+        }
+
+        builder.setPositiveButton("Cerrar") { dialog, _ -> dialog.dismiss() }
+        builder.setNegativeButton("Borrar Historial") { dialog, _ ->
+            borrarHistorial()
+            dialog.dismiss()
+        }
+        builder.create().show()
+    }
+
+    private fun borrarHistorial() {
+        val db = dbHelper.writableDatabase
+        db.delete("historial", null, null)
+        db.close()
+        Toast.makeText(this, "Historial borrado", Toast.LENGTH_SHORT).show()
     }
 
 
@@ -622,6 +808,18 @@ class CalculadoraCompleja : AppCompatActivity() {
         }
 
         val resultado = calculo(lista)
+
+
+        val db = dbHelper.writableDatabase
+        val values = ContentValues().apply {
+            put("operacion", binding.editText.text.toString())
+            put("fecha", SimpleDateFormat("HH:mm:ss", Locale.getDefault()).format(Date()))
+            put("resultado", resultado.toString())
+        }
+        db.insert("historial", null, values)
+        db.close()
+
+
         lista.clear()
         lista.add(resultado.toString())
 

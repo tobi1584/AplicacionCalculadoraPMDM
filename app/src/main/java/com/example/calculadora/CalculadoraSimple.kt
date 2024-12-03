@@ -192,9 +192,16 @@ class CalculadoraSimple : AppCompatActivity() {
             textView.layoutParams = paramsText
 
             val clickListener = {
-                binding.mainEditText.append(symbol)
-                lista.add(value.toString())
-                dialog.dismiss() // Cerrar el diálogo
+                val currentText = binding.mainEditText.text.toString()
+                if (currentText.toDoubleOrNull() != null) {
+                    binding.mainEditText.setText(symbol)
+                    lista.clear()
+                    lista.add(value.toString())
+                } else {
+                    binding.mainEditText.append(symbol)
+                    lista.add(value.toString())
+                }
+                dialog.dismiss()
             }
 
             imageView.setOnClickListener { clickListener() }
