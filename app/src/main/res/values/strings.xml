@@ -59,6 +59,16 @@
     <string name="velocidad">Velocidad</string>
     <string name="temperatura">Temperatura</string>
     <string name="all_clean1">C</string>
+    <string name="Hexadecimal_F">F</string>
+    <string name="Hexadecimal_E">E</string>
+    <string name="Hexadecimal_D">D</string>
+    <string name="Hexadecimal_C">C</string>
+    <string name="Hexadecimal_B">B</string>
+    <string name="Hexadecimal_A">A</string>
+    <string name="sistema_numeral_tittle">Sistema numeral</string>
+    <string name="longitud_tittle">Longitud</string>
+    <string name="temperatura_tittle">Temperatura</string>
+    <string name="tiempo_tittle">Tiempo</string>
 
 
 </resources>

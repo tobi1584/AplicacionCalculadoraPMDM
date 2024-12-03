@@ -81,25 +81,31 @@ class Area : AppCompatActivity() {
                 override fun onNothingSelected(parent: AdapterView<*>) {}
             }
 
+            val backButton = findViewById<ImageButton>(R.id.backButton)
+            backButton.setOnClickListener {
+                onBackPressed()
+            }
+
             unidadOrigenEditText.setText("1")
             unidadOrigenEditText.setSelection(1)
 
             unidadOrigenEditText.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
-                    if (!actualizando) {
-                        convertirYActualizar(unidadOrigenEditText, unidadDestinoEditText, optionsSpinner, optionsSpinner2)
-                    }
+                    if (actualizando) return
+                    convertirYActualizar(unidadOrigenEditText, unidadDestinoEditText, findViewById(R.id.spinner1), findViewById(R.id.spinner2))
                 }
+
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             })
 
+
             unidadDestinoEditText.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
-                    if (!actualizando) {
-                        convertirYActualizar(unidadDestinoEditText, unidadOrigenEditText, optionsSpinner2, optionsSpinner)
-                    }
+                    if (actualizando) return
+                    convertirYActualizar(unidadDestinoEditText, unidadOrigenEditText, findViewById(R.id.spinner2), findViewById(R.id.spinner1))
                 }
+
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             })
@@ -138,9 +144,15 @@ class Area : AppCompatActivity() {
 
     private fun convertirYActualizar(origen: EditText, destino: EditText, spinnerOrigen: Spinner, spinnerDestino: Spinner) {
         if (actualizando) return
+        if (origen.text.isNullOrEmpty()) {
+            actualizando = true
+            destino.text.clear()
+            actualizando = false
+            return
+        }
 
         try {
-            val valor = origen.text.toString().toDoubleOrNull() ?: 0.0
+            val valor = origen.text.toString().toDoubleOrNull() ?: return
             val unidadOrigen = spinnerOrigen.selectedItem.toString()
             val unidadDestino = spinnerDestino.selectedItem.toString()
             val resultado = convertirUnidad(unidadOrigen, unidadDestino, valor)
@@ -157,6 +169,11 @@ class Area : AppCompatActivity() {
             e.printStackTrace()
         }
     }
+
+
+
+
+
 
     private fun initButtons() {
         try {

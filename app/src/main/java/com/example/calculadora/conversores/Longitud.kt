@@ -14,13 +14,11 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.calculadora.R
-import com.example.calculadora.databinding.LongitudBinding
 import java.text.DecimalFormat
 
 class Longitud : AppCompatActivity() {
 
     private var actualizando = false
-    private lateinit var longitudBinding: LongitudBinding
     private lateinit var myButtons: Map<Button, String>
     private lateinit var unidadOrigenEditText: EditText
     private lateinit var unidadDestinoEditText: EditText
@@ -51,6 +49,11 @@ class Longitud : AppCompatActivity() {
         val selectedOptionTextView: TextView = findViewById(R.id.seleccion1)
         val optionsSpinner2: Spinner = findViewById(R.id.spinner2)
         val selectedOptionTextView2: TextView = findViewById(R.id.seleccion2)
+
+        val backButton = findViewById<ImageButton>(R.id.backButton)
+        backButton.setOnClickListener {
+            onBackPressed()
+        }
 
         val options = arrayOf("Kilómetro km", "Metro m", "Decímetro dm", "Centímetro cm",
             "Milímetro mm", "Micrómetro µm", "Nanómetro nm", "Picómetro pm", "Milla náutica nmi",
@@ -124,6 +127,12 @@ class Longitud : AppCompatActivity() {
 
     private fun convertirYActualizar(origen: EditText, destino: EditText, spinnerOrigen: Spinner, spinnerDestino: Spinner) {
         if (actualizando) return
+        if (origen.text.isNullOrEmpty()) {
+            actualizando = true
+            destino.text.clear()
+            actualizando = false
+            return
+        }
 
         val valor = origen.text.toString().toDoubleOrNull() ?: 0.0
         val unidadOrigen = spinnerOrigen.selectedItem.toString()
@@ -177,6 +186,10 @@ class Longitud : AppCompatActivity() {
             if (text.isNotEmpty()) {
                 editTextActual.setText(text.substring(0, text.length - 1))
                 editTextActual.setSelection(editTextActual.text.length)
+                if (editTextActual.text.isEmpty()) {
+                    unidadOrigenEditText.text.clear()
+                    unidadDestinoEditText.text.clear()
+                }
             }
         }
     }

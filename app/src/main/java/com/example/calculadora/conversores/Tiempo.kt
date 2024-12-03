@@ -14,26 +14,23 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.calculadora.R
-import com.example.calculadora.databinding.LongitudBinding
 import java.text.DecimalFormat
 
 class Tiempo : AppCompatActivity() {
 
     private var actualizando = false
-    private lateinit var longitudBinding: LongitudBinding
     private lateinit var myButtons: Map<Button, String>
     private lateinit var unidadOrigenEditText: EditText
     private lateinit var unidadDestinoEditText: EditText
-    private lateinit var editTextActual: EditText // Declare editTextActual
+    private lateinit var editTextActual: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.longitud)
+        setContentView(R.layout.tiempo)
 
         unidadOrigenEditText = findViewById(R.id.unidadOrigen)
         unidadDestinoEditText = findViewById(R.id.unidadDestino)
 
-        // Initialize editTextActual with one of the EditTexts
         editTextActual = unidadOrigenEditText
 
         unidadOrigenEditText.setOnFocusChangeListener { _, hasFocus ->
@@ -58,6 +55,11 @@ class Tiempo : AppCompatActivity() {
             "Minuto min", "Segundo s", "Milisegundo ms",
             "Microsegundo µs", "Picosegundo ps"
         )
+
+        val backButton = findViewById<ImageButton>(R.id.backButton)
+        backButton.setOnClickListener {
+            onBackPressed()
+        }
 
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, options)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)

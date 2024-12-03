@@ -17,30 +17,11 @@
         app:layout_constraintStart_toStartOf="parent"
         tools:ignore="MissingConstraints">
 
-        <Space
-            android:id="@+id/space1"
-            android:layout_width="9dp"
-            android:layout_height="wrap_content"></Space>
-
         <TextView
-            android:id="@+id/CalculadoraTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Calculadora"
-            android:textSize="22sp"
-            android:textStyle="bold"></TextView>
-
-        <Space
-            android:id="@+id/space2"
-            android:layout_width="9dp"
-            android:layout_height="wrap_content"></Space>
-
-        <TextView
-            android:id="@+id/ConversorTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Conversor"
-            android:textSize="22sp"
+            android:text="@string/temperatura_tittle"
+            android:textSize="30sp"
             android:textStyle="bold"></TextView>
 
     </LinearLayout>
@@ -388,5 +369,18 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.415"
         tools:text="@string/number_0" />
+
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/backGroundColor"
+        android:src="@drawable/ic_back_arrow"
+        app:layout_constraintBottom_toTopOf="@+id/seleccion1"
+        app:layout_constraintEnd_toStartOf="@+id/linearLayout2"
+        app:layout_constraintHorizontal_bias="0.222"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.127" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

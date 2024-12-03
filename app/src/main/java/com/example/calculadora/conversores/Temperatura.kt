@@ -14,12 +14,10 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.example.calculadora.R
-import com.example.calculadora.databinding.LongitudBinding
 
 class Temperatura : AppCompatActivity() {
 
     private var actualizando = false
-    private lateinit var longitudBinding: LongitudBinding
     private lateinit var myButtons: Map<Button, String>
     private lateinit var unidadOrigenEditText: EditText
     private lateinit var unidadDestinoEditText: EditText
@@ -27,7 +25,7 @@ class Temperatura : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.longitud)
+        setContentView(R.layout.temperatura)
 
         unidadOrigenEditText = findViewById(R.id.unidadOrigen)
         unidadDestinoEditText = findViewById(R.id.unidadDestino)
@@ -53,6 +51,11 @@ class Temperatura : AppCompatActivity() {
 
         val options = arrayOf("Celsius Cº", "Fahrenheit ºF", "Kelvin K", "Rankine ºR", "Réaumur ºRe")
 
+        val backButton = findViewById<ImageButton>(R.id.backButton)
+        backButton.setOnClickListener {
+            onBackPressed()
+        }
+
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, options)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
@@ -66,7 +69,7 @@ class Temperatura : AppCompatActivity() {
         }
 
         optionsSpinner2.adapter = adapter
-        optionsSpinner2.setSelection(options.indexOf("Celsius Cº"))
+        optionsSpinner2.setSelection(options.indexOf("Fahrenheit ºF"))
         optionsSpinner2.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                 selectedOptionTextView2.text = options[position]
@@ -75,7 +78,7 @@ class Temperatura : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
-        unidadOrigenEditText.setText("0")
+        unidadOrigenEditText.setText("1")
         unidadOrigenEditText.setSelection(1)
 
         unidadOrigenEditText.addTextChangedListener(object : TextWatcher {
