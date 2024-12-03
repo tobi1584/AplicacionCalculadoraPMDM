@@ -17,6 +17,7 @@ import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.calculadora.conversores.Conversores
 import androidx.core.view.marginLeft
 import androidx.core.view.marginTop
 import com.example.calculadora.databinding.CalculadoraSimpleBinding
@@ -140,6 +141,11 @@ class CalculadoraSimple : AppCompatActivity() {
                 }
             }
             popupMenu.show()
+        }
+
+        binding.ConversorTextView.setOnClickListener {
+            val intent = Intent(this, Conversores::class.java)
+            startActivity(intent)
         }
     }
 

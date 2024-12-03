@@ -10,6 +10,7 @@
     <string name="number_7">7</string>
     <string name="number_8">8</string>
     <string name="number_9">9</string>
+    <string name="number_00">00</string>
     <string name="plus">+</string>
     <string name="minus">-</string>
     <string name="multiply">x</string>
@@ -51,12 +52,13 @@
     <string name="masa">Masa</string>
     <string name="area">Área</string>
     <string name="tiempo">Tiempo</string>
-    <string name="datos">4</string>
-    <string name="descuento">5</string>
-    <string name="volumen">6</string>
-    <string name="sistema_numeral">7</string>
-    <string name="velocidad">8</string>
-    <string name="temperatura">9</string>
+    <string name="datos">Datos</string>
+    <string name="descuento">Descuento</string>
+    <string name="volumen">Volumen</string>
+    <string name="sistema_numeral">Sistema numeral</string>
+    <string name="velocidad">Velocidad</string>
+    <string name="temperatura">Temperatura</string>
+    <string name="all_clean1">C</string>
 
 
 </resources>
