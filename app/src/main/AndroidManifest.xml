@@ -13,6 +13,24 @@
         android:theme="@style/Theme.Calculadora"
         tools:targetApi="31">
         <activity
+            android:name=".conversores.Descuento"
+            android:exported="true" />
+        <activity
+            android:name=".conversores.Masa"
+            android:exported="true" />
+        <activity
+            android:name=".conversores.Velocidad"
+            android:exported="true" />
+        <activity
+            android:name=".conversores.Datos"
+            android:exported="true" />
+        <activity
+            android:name=".conversores.Volumen"
+            android:exported="true" />
+        <activity
+            android:name=".conversores.Imc"
+            android:exported="true" />
+        <activity
             android:name=".conversores.Temperatura"
             android:exported="false" />
         <activity

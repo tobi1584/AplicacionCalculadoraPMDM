@@ -47,6 +47,7 @@
     <string name="magnitudes">Magnitudes</string>
 
     <!-- Convertidores -->
+    <string name="clean">C</string>
     <string name="divisas">Divisas</string>
     <string name="longitud">Longitud</string>
     <string name="masa">Masa</string>
@@ -58,6 +59,10 @@
     <string name="sistema_numeral">Sistema numeral</string>
     <string name="velocidad">Velocidad</string>
     <string name="temperatura">Temperatura</string>
+    <string name="descuento_de_descuento">Descuento (%de descuento)</string>
+    <string name="precio_original">Precio original</string>
+    <string name="precio_final">Precio Final</string>
+    <string name="others">More options</string>
     <string name="all_clean1">C</string>
     <string name="Hexadecimal_F">F</string>
     <string name="Hexadecimal_E">E</string>
@@ -69,6 +74,69 @@
     <string name="longitud_tittle">Longitud</string>
     <string name="temperatura_tittle">Temperatura</string>
     <string name="tiempo_tittle">Tiempo</string>
-
+    <string name="imc_resumen">Acerca del IMC\n\nEl índice de masa corporal (IMC) es el peso de una persona en kilogramos dividido por el cuadrado de la altura en metros. El IMC es un método de detección fácil para la categoría de peso.</string>
+    <string name="introducir_peso">Introducir peso</string>
+    <string name="peso_kg">Peso (kg)</string>
+    <string name="introducir_altura">Introducir altura</string>
+    <string name="altura_cm">Altura (cm)</string>
+    <string name="mujer">Mujer</string>
+    <string name="hombre">Hombre</string>
+    <string name="g_nero">Género</string>
+    <string name="introducir_edad">Introducir edad</string>
+    <string name="edad">Edad</string>
+    <string name="imc">IMC</string>
+    <string name="back">back</string>
+    <string name="descuento_title">Descuento</string>
+    <string name="masa_title">Masa</string>
+    <string name="velocidad_title">Velocidad\n</string>
+    <string name="datos_title">Datos\n</string>
+    <string name="Volumen_title">Volumen\n</string>
+    <string name="calcular">Calcular</string>
+    <string-array name="mass_units">
+        <item>Tonelada t</item>
+        <item>Kilogramo kg</item>
+        <item>Gramo g</item>
+        <item>Miligramo mg</item>
+        <item>Microgramo μg</item>
+        <item>Quintal q</item>
+        <item>Libra lb</item>
+        <item>Onza oz</item>
+        <item>Quilate ct</item>
+        <item>Grano gr</item>
+        <item>Tonelada larga l.t</item>
+        <item>Tonelada corta sh.t</item>
+        <item>Quintal ingles cwt</item>
+        <item>Quintal norteamericano cwt</item>
+    </string-array>
+    <string-array name="velocity_units">
+        <item>Kilómetro por hora km/h</item>
+        <item>Metro por segundo m/s</item>
+        <item>Milla por hora mph</item>
+        <item>Milla náutica nmi</item>
+        <item>Pie por segundo ft/s</item>
+        <item>Yarda por segundo yd/s</item>
+    </string-array>
+    <string-array name="data_units">
+        <item>Byte B</item>
+        <item>Kilobyte KB</item>
+        <item>Megabyte MB</item>
+        <item>Gigabyte GB</item>
+        <item>Terabyte TB</item>
+        <item>Petabyte PB</item>
+    </string-array>
+    <string-array name="volume_units">
+        <item>Metro cúbico m³</item>
+        <item>Decímetro cúbico dm³</item>
+        <item>Centímetro cúbico cm³</item>
+        <item>Milímetro cúbico mm³</item>
+        <item>Hectolitro hl</item>
+        <item>Litro l</item>
+        <item>Decilitro dl</item>
+        <item>Centilitro cl</item>
+        <item>Mililitro ml</item>
+        <item>Pie cúbico ft³</item>
+        <item>Pulgada cúbica in³</item>
+        <item>Yarda cúbica yd³</item>
+    </string-array>
 
 </resources>
