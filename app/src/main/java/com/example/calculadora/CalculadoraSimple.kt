@@ -1,6 +1,5 @@
 package com.example.calculadora
 
-import android.R
 import android.app.AlertDialog
 import android.content.ContentValues
 import android.content.Intent
@@ -10,19 +9,18 @@ import android.widget.ArrayAdapter
 import android.widget.Button
 import android.widget.GridLayout
 import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.ListView
 import android.widget.PopupMenu
 import android.widget.ScrollView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.marginLeft
-import androidx.core.view.marginTop
 import com.example.calculadora.databinding.CalculadoraSimpleBinding
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.math.ln
+import kotlin.math.sqrt
 
 class CalculadoraSimple : AppCompatActivity() {
 
@@ -155,11 +153,11 @@ class CalculadoraSimple : AppCompatActivity() {
         val constants = listOf(
             Triple("π (Pi)", "\u03C0", Math.PI),
             Triple("e (Número de Euler)", "e", Math.E),
-            Triple("√2 (Raíz cuadrada de 2)", "√2", Math.sqrt(2.0)),
+            Triple("√2 (Raíz cuadrada de 2)", "√2", sqrt(2.0)),
             Triple("Φ (Número áureo)", "\u03A6", 1.61803),
             Triple("γ (Constante de Euler-Mascheroni)", "\u03B3", 0.57721),
-            Triple("ln(2) (Logaritmo natural de 2)", "ln(2)", Math.log(2.0)),
-            Triple("ln(10) (Logaritmo natural de 10)", "ln(10)", Math.log(10.0)),
+            Triple("ln(2) (Logaritmo natural de 2)", "ln(2)", ln(2.0)),
+            Triple("ln(10) (Logaritmo natural de 10)", "ln(10)", ln(10.0)),
             Triple("c (Velocidad de la luz en el vacío)", "c", 299792458.0),
             Triple("G (Constante gravitacional)", "G", 6.67430e-11),
             Triple("h (Constante de Planck)", "h", 6.62607e-34)
@@ -194,7 +192,7 @@ class CalculadoraSimple : AppCompatActivity() {
     } else {
         lista.clear()
         binding.mainEditText.setText(symbol)
-        lista.add(symbol)
+        lista.add(value.toString())
         dialog.dismiss() // Cerrar el diálogo
 
     }
@@ -218,16 +216,16 @@ class CalculadoraSimple : AppCompatActivity() {
 
     private fun getImageResourceByName(name: String): Int {
         return when (name) {
-            "\u03C0" -> com.example.calculadora.R.drawable.pi_image
-            "e" -> com.example.calculadora.R.drawable.e_image
-            "√2" -> com.example.calculadora.R.drawable.sqrt2_image
-            "\u03A6" -> com.example.calculadora.R.drawable.phi_image
-            "\u03B3" -> com.example.calculadora.R.drawable.gamma_image
-            "ln(2)" -> com.example.calculadora.R.drawable.ln2_image
-            "ln(10)" -> com.example.calculadora.R.drawable.ln10_image
-            "c" -> com.example.calculadora.R.drawable.c_image
-            "G" -> com.example.calculadora.R.drawable.g_image
-            "h" -> com.example.calculadora.R.drawable.h_image
+            "\u03C0" -> R.drawable.pi_image
+            "e" -> R.drawable.e_image
+            "√2" -> R.drawable.sqrt2_image
+            "\u03A6" -> R.drawable.phi_image
+            "\u03B3" -> R.drawable.gamma_image
+            "ln(2)" -> R.drawable.ln2_image
+            "ln(10)" -> R.drawable.ln10_image
+            "c" -> R.drawable.c_image
+            "G" -> R.drawable.g_image
+            "h" -> R.drawable.h_image
             else -> 0
         }
     }
@@ -288,6 +286,15 @@ class CalculadoraSimple : AppCompatActivity() {
 
         val resultado = calculo(lista)
 
+
+        lista.clear()
+        lista.add(resultado.toString())
+
+        val resultadoFinal: String = if (resultado % 1 == 0.0) {
+            resultado.toString()
+        } else {
+            resultado.toString()
+        }
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
             put("operacion", binding.mainEditText.text.toString())
@@ -296,19 +303,8 @@ class CalculadoraSimple : AppCompatActivity() {
         }
         db.insert("historial", null, values)
         db.close()
-
-        lista.clear()
-        lista.add(resultado.toString())
-
-        val resultadoFinal: String
-
-        if (resultado % 1 == 0.0) {
-            resultadoFinal = resultado.toInt().toString()
-        } else {
-            resultadoFinal = resultado.toString()
-        }
-
         binding.mainEditText.setText(resultadoFinal)
+
         resultadoCalculado = true
     }
 
