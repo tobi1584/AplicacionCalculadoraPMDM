@@ -15,12 +15,10 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.example.calculadora.R
-import com.example.calculadora.databinding.LongitudBinding
 
 class SistemaNumeral : AppCompatActivity() {
 
     private var actualizando = false
-    private lateinit var longitudBinding: LongitudBinding
     private lateinit var myButtons: Map<Button, String>
     private lateinit var unidadOrigenEditText: EditText
     private lateinit var unidadDestinoEditText: EditText
@@ -28,7 +26,7 @@ class SistemaNumeral : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.longitud)
+        setContentView(R.layout.sistema_numeral)
 
         unidadOrigenEditText = findViewById(R.id.unidadOrigen)
         unidadDestinoEditText = findViewById(R.id.unidadDestino)
@@ -58,6 +56,11 @@ class SistemaNumeral : AppCompatActivity() {
 
         val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, options)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+
+        val backButton = findViewById<ImageButton>(R.id.backButton)
+        backButton.setOnClickListener {
+            onBackPressed()
+        }
 
         optionsSpinner.adapter = adapter
         optionsSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
@@ -158,7 +161,13 @@ class SistemaNumeral : AppCompatActivity() {
             findViewById<Button>(R.id.number7) to "7",
             findViewById<Button>(R.id.number8) to "8",
             findViewById<Button>(R.id.number9) to "9",
-            findViewById<Button>(R.id.dotButton) to "."
+            findViewById<Button>(R.id.dotButton) to ".",
+            findViewById<Button>(R.id.equalsButton) to "A",
+            findViewById<Button>(R.id.plusButton) to "B",
+            findViewById<Button>(R.id.minusButton) to "C",
+            findViewById<Button>(R.id.multiplyButton) to "D",
+            findViewById<Button>(R.id.divideButton) to "E",
+            findViewById<Button>(R.id.percentButton) to "F"
         )
 
         myButtons.forEach { (button, value) ->
@@ -189,9 +198,17 @@ class SistemaNumeral : AppCompatActivity() {
     private fun actualizarEstadoBotones() {
         val isBinario = (findViewById<Spinner>(R.id.spinner1).selectedItem.toString() == "Binario BIN" && editTextActual == unidadOrigenEditText) ||
                 (findViewById<Spinner>(R.id.spinner2).selectedItem.toString() == "Binario BIN" && editTextActual == unidadDestinoEditText)
+        val isHexadecimal = (findViewById<Spinner>(R.id.spinner1).selectedItem.toString() == "Hexadecimal HEX" && editTextActual == unidadOrigenEditText) ||
+                (findViewById<Spinner>(R.id.spinner2).selectedItem.toString() == "Hexadecimal HEX" && editTextActual == unidadDestinoEditText)
 
         myButtons.forEach { (button, value) ->
             if (isBinario && value != "0" && value != "1" && value != "00") {
+                button.isEnabled = false
+                button.setTextColor(ContextCompat.getColor(this, R.color.orangeDisabled))
+            } else if (isHexadecimal && value in listOf("A", "B", "C", "D", "E", "F")) {
+                button.isEnabled = true
+                button.setTextColor(ContextCompat.getColor(this, R.color.orange))
+            } else if (!isHexadecimal && value in listOf("A", "B", "C", "D", "E", "F")) {
                 button.isEnabled = false
                 button.setTextColor(ContextCompat.getColor(this, R.color.orangeDisabled))
             } else {
