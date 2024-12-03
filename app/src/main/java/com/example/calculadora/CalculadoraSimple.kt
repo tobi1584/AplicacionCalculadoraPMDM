@@ -185,11 +185,20 @@ class CalculadoraSimple : AppCompatActivity() {
             paramsText.setMargins(50, 100, 0, 0)
             textView.layoutParams = paramsText
 
-            val clickListener = {
-                binding.mainEditText.append(symbol)
-                lista.add(value.toString())
-                dialog.dismiss() // Cerrar el diálogo
-            }
+           val clickListener = {
+    val lastChar = binding.mainEditText.text.lastOrNull()
+    if (lastChar in setOf('+', '-', '/', 'x') || binding.mainEditText.text.isEmpty()) {
+        binding.mainEditText.append(symbol)
+        lista.add(value.toString())
+        dialog.dismiss() // Cerrar el diálogo
+    } else {
+        lista.clear()
+        binding.mainEditText.setText(symbol)
+        lista.add(symbol)
+        dialog.dismiss() // Cerrar el diálogo
+
+    }
+}
 
             imageView.setOnClickListener { clickListener() }
             textView.setOnClickListener { clickListener() }
