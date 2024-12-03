@@ -16,6 +16,7 @@ import java.util.Locale
 
 class Volumen : AppCompatActivity() {
 
+    // Declaración de variables
     private lateinit var unitSpinner1: Spinner
     private lateinit var unitSpinner2: Spinner
     private lateinit var inputEditText: EditText
@@ -34,6 +35,7 @@ class Volumen : AppCompatActivity() {
     private lateinit var numberButtons: List<Button>
     private lateinit var backButton: ImageButton
 
+    // Mapa de conversión de unidades
     private val conversionMap = mapOf(
         "Metro cúbico m³" to 1.0,
         "Decímetro cúbico dm³" to 0.001,
@@ -49,24 +51,31 @@ class Volumen : AppCompatActivity() {
         "Yarda cúbica yd³" to 0.764554858
     )
 
+    // Variable para saber si es una nueva operación
     private var isNewCalculation: Boolean = true
 
     private val locale = Locale("es", "ES")
 
+    // Función que se ejecuta al crear la actividad
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.volumen)
         initUI()
         setupConverter()
         setupCalculator()
+
+        // Botón para regresar a la pantalla de conversores
         backButton = findViewById(R.id.backButton)
+        // Listener para el botón de regresar
         backButton.setOnClickListener {
+            // Creamos un intent para abrir la actividad de Conversores
             val intent = Intent(this, Conversores::class.java)
             startActivity(intent)
             finish()
         }
     }
 
+    // Función para inicializar los elementos de la interfaz
     private fun initUI() {
         unitSpinner1 = findViewById(R.id.unitSpinner1)
         unitSpinner2 = findViewById(R.id.unitSpinner2)
@@ -84,6 +93,7 @@ class Volumen : AppCompatActivity() {
         number00Button = findViewById(R.id.number00)
         percentButton = findViewById(R.id.percentButton)
 
+        // Lista de botones de números
         numberButtons = listOf(
             findViewById(R.id.number0),
             findViewById(R.id.number1),
@@ -97,8 +107,10 @@ class Volumen : AppCompatActivity() {
             findViewById(R.id.number9)
         )
 
+        // Filtro para el inputEditText
         inputEditText.filters = arrayOf(
             InputFilter.LengthFilter(20),
+            // Filtro para solo permitir números y operadores
             InputFilter { source, start, end, dest, dstart, dend ->
                 val allowedChars = "0123456789+-x*/."
                 for (i in start until end) {
@@ -109,51 +121,65 @@ class Volumen : AppCompatActivity() {
                 null
             }
         )
+        // Hacemos que el inputEditText sea focusable
         inputEditText.isFocusable = true
     }
 
+    // Función para configurar el conversor
     private fun setupConverter() {
+        // Creamos un ArrayAdapter para los spinners
         ArrayAdapter.createFromResource(
             this,
             R.array.volume_units,
             android.R.layout.simple_spinner_item
         ).also { adapter ->
+            // Especificamos el layout que se usará para desplegar las opciones
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             unitSpinner1.adapter = adapter
             unitSpinner2.adapter = adapter
         }
 
+        // Listener para los spinners
         unitSpinner1.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            // Función que se ejecuta al seleccionar un elemento
             override fun onItemSelected(
                 parent: AdapterView<*>, view: View?, position: Int, id: Long
             ) {
                 performConversion(false)
             }
 
+            // Función que se ejecuta al no seleccionar nada
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
+        // Listener para los spinners
         unitSpinner2.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+            // Función que se ejecuta al seleccionar un elemento
             override fun onItemSelected(
                 parent: AdapterView<*>, view: View?, position: Int, id: Long
-            ) {
+            ) { // Realizamos la conversión
                 performConversion(false)
             }
 
+            // Función que se ejecuta al no seleccionar nada
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
+        // Listener para el inputEditText
         inputEditText.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 performConversion(false)
             }
 
+            // Funciones que no se utilizan
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
     }
 
+    // Función para configurar la calculadora
     private fun setupCalculator() {
+        // Listener para los botones de números
         numberButtons.forEach { button ->
             button.setOnClickListener {
                 val number = button.text.toString()
@@ -161,6 +187,7 @@ class Volumen : AppCompatActivity() {
             }
         }
 
+        // Listener para el botón de porcentaje
         number00Button.setOnClickListener { appendNumber("00") }
 
         divideButton.setOnClickListener { appendOperator("/") }
@@ -174,42 +201,59 @@ class Volumen : AppCompatActivity() {
         dotButton.setOnClickListener { appendDot() }
     }
 
+    // Función para añadir un número al inputEditText
     private fun appendNumber(number: String) {
+        // Si es una nueva operación, limpiamos el inputEditText
         if (isNewCalculation) {
             inputEditText.setText("")
             isNewCalculation = false
         }
+        // Añadimos el número al inputEditText
         inputEditText.append(number)
     }
 
+    // Función para añadir un punto al inputEditText
     private fun appendDot() {
+        // Si es una nueva operación, limpiamos el inputEditText
         if (isNewCalculation) {
             inputEditText.setText("0")
             isNewCalculation = false
         }
+        // Obtenemos el último número
         val currentText = inputEditText.text.toString()
         val lastNumber = currentText.split(Regex("[+-x*/]")).last()
+
+        // Si el último número no contiene un punto, añadimos el punto
         if (!lastNumber.contains(".")) {
             inputEditText.append(".")
         }
     }
 
+    // Función para añadir un operador al inputEditText
     private fun appendOperator(operator: String) {
+        // Obtenemos el texto actual del inputEditText
         val currentText = inputEditText.text.toString()
+        // Si el texto actual está vacío, no hacemos nada
         if (currentText.isEmpty()) return
 
+        // Obtenemos el último caracter del texto actual
         val lastChar = currentText.last()
+        // Si el último caracter es un operador, lo reemplazamos por el nuevo operador
         if ("+-x*/".contains(lastChar)) {
+            // Reemplazamos el último caracter por el nuevo operador
             inputEditText.setText(currentText.dropLast(1) + operator)
-        } else {
+        } else { // Si no, simplemente añadimos el operador al final
             inputEditText.append(operator)
         }
+        // No es una nueva operación
         isNewCalculation = false
     }
 
     // Función para realizar la conversión
     private fun performConversion(finalize: Boolean) {
+        // Obtenemos el texto del inputEditText
         val inputText = inputEditText.text.toString()
+        // Si el texto está vacío, limpiamos el outputEditText
         if (inputText.isEmpty()) {
             outputEditText.setText("")
             return
@@ -230,37 +274,51 @@ class Volumen : AppCompatActivity() {
 
         val formattedValue = formatForDisplay(convertedValue)
 
+        // Mostramos el valor convertido en el outputEditText
         outputEditText.setText(formattedValue)
 
+        // Si finalize es verdadero, es una nueva operación
         if (finalize) {
             isNewCalculation = true
         }
     }
 
+    // Función para dar formato a un número
     private fun formatForDisplay(number: Double): String {
+        // Obtenemos el formato de número
         val nf = NumberFormat.getInstance(locale) as DecimalFormat
         val absNumber = kotlin.math.abs(number)
+        // Si el número es muy pequeño o muy grande, usamos notación científica
         return if (absNumber != 0.0 && (absNumber < 1e-6 || absNumber > 1e9)) {
+            // Formateamos el número en notación científica
             val decimalSymbols = DecimalFormatSymbols(locale)
             val sciFormat = DecimalFormat("0.#####E0", decimalSymbols)
             sciFormat.format(number)
         } else {
+            // Formateamos el número con 15 decimales
             nf.maximumFractionDigits = 15
             nf.minimumFractionDigits = 0
             nf.format(number)
         }
     }
 
+    // Función para limpiar todo
     private fun clearAll() {
         inputEditText.setText("")
         outputEditText.setText("")
         isNewCalculation = true
     }
 
+    // Función para borrar el último caracter
     private fun deleteLast() {
+        // Obtenemos el texto actual del inputEditText
         val currentText = inputEditText.text.toString()
+
+        // Si el texto actual no está vacío, borramos el último caracter
         if (currentText.isNotEmpty()) {
+            // Borramos el último caracter
             inputEditText.setText(currentText.dropLast(1))
+            // Si el último caracter es un operador, no es una nueva operación
             if (currentText.last() in "+-x*/") {
                 isNewCalculation = false
             }
