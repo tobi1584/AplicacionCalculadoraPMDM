@@ -17,6 +17,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import com.example.calculadora.conversores.Conversores
 import com.example.calculadora.databinding.CalculadoraComplejaBinding
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -202,6 +203,11 @@ class CalculadoraCompleja : AppCompatActivity() {
 
         binding.switchSimpleButton.setOnClickListener {
             val intent = Intent(this, CalculadoraSimple::class.java)
+            startActivity(intent)
+        }
+
+        binding.ConversorTextView.setOnClickListener {
+            val intent = Intent(this, Conversores::class.java)
             startActivity(intent)
         }
 
