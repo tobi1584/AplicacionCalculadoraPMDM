@@ -3,6 +3,7 @@ package com.example.calculadora.conversores
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.example.calculadora.CalculadoraSimple
 import com.example.calculadora.databinding.ConversoresBinding
 
 class Conversores : AppCompatActivity() {
@@ -18,8 +19,8 @@ class Conversores : AppCompatActivity() {
     }
 
     private fun initListeners() {
-        conversoresBinding.ConversorTextView.setOnClickListener {
-            val intent = Intent(this, Conversores::class.java)
+        conversoresBinding.CalculadoraTextView.setOnClickListener {
+            val intent = Intent(this, CalculadoraSimple::class.java)
             startActivity(intent)
         }
 

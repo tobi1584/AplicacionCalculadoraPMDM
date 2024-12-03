@@ -170,11 +170,6 @@ class Area : AppCompatActivity() {
         }
     }
 
-
-
-
-
-
     private fun initButtons() {
         try {
             myButtons = mapOf(
