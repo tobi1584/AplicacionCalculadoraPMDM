@@ -9,7 +9,6 @@ import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import com.example.calculadora.R
-import net.objecthunter.exp4j.ExpressionBuilder
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.text.NumberFormat
@@ -208,6 +207,7 @@ class Volumen : AppCompatActivity() {
         isNewCalculation = false
     }
 
+    // Función para realizar la conversión
     private fun performConversion(finalize: Boolean) {
         val inputText = inputEditText.text.toString()
         if (inputText.isEmpty()) {
@@ -215,17 +215,8 @@ class Volumen : AppCompatActivity() {
             return
         }
 
-        val sanitizedInput = inputText.replace("x", "*")
-
-        val inputValue = try {
-            ExpressionBuilder(sanitizedInput).build().evaluate()
-        } catch (e: ArithmeticException) {
-            outputEditText.setText("Error: División por 0")
-            return
-        } catch (e: Exception) {
-            outputEditText.setText("Input no válido")
-            return
-        }
+        // Aquí simplemente mostramos el texto de entrada en el outputEditText
+        outputEditText.setText(inputText)
 
         val fromUnit = unitSpinner1.selectedItem.toString()
         val toUnit = unitSpinner2.selectedItem.toString()
@@ -233,8 +224,9 @@ class Volumen : AppCompatActivity() {
         val fromFactor = conversionMap[fromUnit] ?: 1.0
         val toFactor = conversionMap[toUnit] ?: 1.0
 
-        val valueInBase = inputValue * fromFactor
-        val convertedValue = valueInBase / toFactor
+        // Si el texto de entrada no es un número válido, no hacemos nada
+        val valueInBase = inputText.toDoubleOrNull() ?: return
+        val convertedValue = valueInBase * fromFactor / toFactor
 
         val formattedValue = formatForDisplay(convertedValue)
 

@@ -60,6 +60,7 @@ class Imc : AppCompatActivity() {
         }
     }
 
+    //Metodo para resaltar el genero seleccionado
     private fun highlightSelectedGender() {
         if (selectedGender == "Hombre") {
             maleButton.setBackgroundResource(R.drawable.selected_background)
@@ -70,11 +71,12 @@ class Imc : AppCompatActivity() {
         }
     }
 
+    //Metodo para filtrar los inputs
     private fun setupInputFilters() {
         heightInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 val text = s.toString()
-                if (text.contains(",")) {
+                if (text.contains(",")) { // Reemplazar comas por puntos
                     heightInput.setText(text.replace(",", "."))
                     heightInput.setSelection(heightInput.text.length)
                 }
@@ -84,6 +86,7 @@ class Imc : AppCompatActivity() {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
         })
 
+        //Listener para el peso
         weightInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
                 val text = s.toString()
@@ -98,11 +101,13 @@ class Imc : AppCompatActivity() {
         })
     }
 
+    //Metodo para calcular el IMC
     private fun calculateIMC() {
         ageInput.error = null
         heightInput.error = null
         weightInput.error = null
 
+        //Obtener los valores de los inputs
         val ageText = ageInput.text.toString().trim()
         val heightText = heightInput.text.toString().trim()
         val weightText = weightInput.text.toString().trim()
@@ -138,10 +143,12 @@ class Imc : AppCompatActivity() {
             valid = false
         }
 
+        // Si los valores son validos, calcular el IMC
         if (valid && age != null && heightCm != null && weightKg != null) {
             val heightM = heightCm / 100
             val imc = weightKg / (heightM * heightM)
 
+            //Switch para determinar la categoria del IMC
             val category = when {
                 imc < 18.5 -> "Bajo peso"
                 imc in 18.5..24.9 -> "Peso saludable"
@@ -149,6 +156,7 @@ class Imc : AppCompatActivity() {
                 else -> "Obesidad"
             }
 
+            //Mostrar un dialogo con el resultado
             AlertDialog.Builder(this)
                 .setTitle("Tu IMC")
                 .setMessage(String.format("Tu IMC es %.2f (%s)", imc, category))

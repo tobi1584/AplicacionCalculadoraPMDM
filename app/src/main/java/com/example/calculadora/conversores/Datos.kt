@@ -16,11 +16,13 @@ import java.util.Locale
 
 class Datos : AppCompatActivity() {
 
+    // Declaración de variables
     private lateinit var unitSpinner1: Spinner
     private lateinit var unitSpinner2: Spinner
     private lateinit var inputEditText: EditText
     private lateinit var outputEditText: EditText
 
+    // Declaración de variables para la calculadora
     private lateinit var cleanAllButton: Button
     private lateinit var deleteButton: ImageButton
     private lateinit var divideButton: Button
@@ -33,6 +35,7 @@ class Datos : AppCompatActivity() {
     private lateinit var percentButton: Button
     private lateinit var numberButtons: List<Button>
 
+    // Mapa de conversión de unidades
     private val conversionMap = mapOf(
         "Byte B" to 1.0,
         "Kilobyte KB" to 1_000.0,
@@ -42,18 +45,23 @@ class Datos : AppCompatActivity() {
         "Petabyte PB" to 1_000_000_000_000_000.0
     )
 
+    // Variable para saber si se trata de una nueva operación
     private var isNewCalculation: Boolean = true
 
+    // Locale para formatear los números
     private val locale = Locale("es", "ES")
 
+    // Declaración de botón para volver a la pantalla anterior
     private lateinit var backButton: ImageButton
 
+    // Función que se ejecuta al crear la actividad
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.datos)
         initUI()
         setupConverter()
         setupCalculator()
+        // Botón para volver a la pantalla anterior
         backButton = findViewById(R.id.backButton)
         backButton.setOnClickListener {
             val intent = Intent(this, Conversores::class.java)
@@ -62,6 +70,7 @@ class Datos : AppCompatActivity() {
         }
     }
 
+    // Función para inicializar la interfaz de usuario
     private fun initUI() {
         unitSpinner1 = findViewById(R.id.unitSpinner1)
         unitSpinner2 = findViewById(R.id.unitSpinner2)
@@ -92,13 +101,14 @@ class Datos : AppCompatActivity() {
             findViewById(R.id.number9)
         )
 
+        // Filtro para el inputEditText que es el campo de texto donde se introduce el número
         inputEditText.filters = arrayOf(
             InputFilter.LengthFilter(20),
             InputFilter { source, start, end, dest, dstart, dend ->
                 val allowedChars = "0123456789+-x*/."
                 for (i in start until end) {
                     if (!allowedChars.contains(source[i])) {
-                        return@InputFilter ""
+                        return@InputFilter "" // Salimos del bucle y no permitimos la entrada
                     }
                 }
                 null
@@ -108,6 +118,7 @@ class Datos : AppCompatActivity() {
         inputEditText.isFocusable = true
     }
 
+    // Función para configurar el conversor
     private fun setupConverter() {
         ArrayAdapter.createFromResource(
             this,
@@ -119,6 +130,7 @@ class Datos : AppCompatActivity() {
             unitSpinner2.adapter = adapter
         }
 
+        // Listener para los spinners
         unitSpinner1.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>, view: View?, position: Int, id: Long
@@ -129,6 +141,7 @@ class Datos : AppCompatActivity() {
             override fun onNothingSelected(parent: AdapterView<*>) {}
         }
 
+        // Listener para los spinners
         unitSpinner2.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(
                 parent: AdapterView<*>, view: View?, position: Int, id: Long
@@ -170,6 +183,8 @@ class Datos : AppCompatActivity() {
         dotButton.setOnClickListener { appendDot() }
     }
 
+    // Funciones para la calculadora
+    // Función para añadir un número al inputEditText
     private fun appendNumber(number: String) {
         if (isNewCalculation) {
             inputEditText.setText("")
@@ -178,6 +193,7 @@ class Datos : AppCompatActivity() {
         inputEditText.append(number)
     }
 
+    // Función para añadir un punto al inputEditText
     private fun appendDot() {
         if (isNewCalculation) {
             inputEditText.setText("0")
@@ -190,6 +206,7 @@ class Datos : AppCompatActivity() {
         }
     }
 
+    // Función para añadir un operador al inputEditText
     private fun appendOperator(operator: String) {
         val currentText = inputEditText.text.toString()
         if (currentText.isEmpty()) return
@@ -203,6 +220,8 @@ class Datos : AppCompatActivity() {
         isNewCalculation = false
     }
 
+
+    // Función para realizar la conversión
     private fun performConversion(finalize: Boolean) {
         val inputText = inputEditText.text.toString()
         if (inputText.isEmpty()) {
@@ -219,6 +238,7 @@ class Datos : AppCompatActivity() {
         val fromFactor = conversionMap[fromUnit] ?: 1.0
         val toFactor = conversionMap[toUnit] ?: 1.0
 
+        // Si el texto de entrada no es un número válido, no hacemos nada
         val valueInBase = inputText.toDoubleOrNull() ?: return
         val convertedValue = valueInBase * fromFactor / toFactor
 
@@ -231,10 +251,11 @@ class Datos : AppCompatActivity() {
         }
     }
 
+    // Función para formatear los números
     private fun formatForDisplay(number: Double): String {
-        val nf = NumberFormat.getInstance(locale) as DecimalFormat
+        val nf = NumberFormat.getInstance(locale) as DecimalFormat // Formateador de números
         val absNumber = kotlin.math.abs(number)
-        return if (absNumber != 0.0 && (absNumber < 1e-4 || absNumber > 1e9)) {
+        return if (absNumber != 0.0 && (absNumber < 1e-4 || absNumber > 1e9)) { // Notación científica
             val decimalSymbols = DecimalFormatSymbols(locale)
             val sciFormat = DecimalFormat("0.#####E0", decimalSymbols)
             sciFormat.format(number)
@@ -245,12 +266,14 @@ class Datos : AppCompatActivity() {
         }
     }
 
+    // Función para limpiar todos los campos
     private fun clearAll() {
         inputEditText.setText("")
         outputEditText.setText("")
         isNewCalculation = true
     }
 
+    // Función para borrar el último carácter
     private fun deleteLast() {
         val currentText = inputEditText.text.toString()
         if (currentText.isNotEmpty()) {

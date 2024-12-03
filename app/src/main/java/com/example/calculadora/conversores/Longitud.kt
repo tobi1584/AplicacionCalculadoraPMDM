@@ -24,15 +24,19 @@ class Longitud : AppCompatActivity() {
     private lateinit var unidadDestinoEditText: EditText
     private lateinit var editTextActual: EditText
 
+    // Función que se ejecuta al crear la actividad
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.longitud)
+        setContentView(R.layout.longitud) // Asigna el layout a la actividad
 
+        // Obtener referencias a los elementos de la interfaz
         unidadOrigenEditText = findViewById(R.id.unidadOrigen)
         unidadDestinoEditText = findViewById(R.id.unidadDestino)
 
+        // Establecer el EditText actual
         editTextActual = unidadOrigenEditText
 
+        // Establecer el EditText actual al hacer clic en él
         unidadOrigenEditText.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 editTextActual = unidadOrigenEditText
@@ -218,6 +222,7 @@ class Longitud : AppCompatActivity() {
         }
     }
 
+    // Función que convierte una unidad de longitud a otra
     fun convertirUnidad(unidadOrigen: String, unidadDestino: String, valor: Double): Double {
         val conversionMedidas = mapOf(
             "Kilómetro km" to 1000.0,

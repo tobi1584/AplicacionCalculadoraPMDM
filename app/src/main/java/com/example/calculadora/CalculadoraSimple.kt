@@ -27,11 +27,12 @@ import java.util.Locale
 
 class CalculadoraSimple : AppCompatActivity() {
 
+    //Declaración de variables
     private lateinit var binding: CalculadoraSimpleBinding
     private val lista = ArrayList<String>()
     private lateinit var myButtons: Map<Button, String>
     private var resultadoCalculado = false
-    private lateinit var dbHelper: SQLite
+    private lateinit var dbHelper: SQLite // Declarar la variable para la base de datos
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +56,7 @@ class CalculadoraSimple : AppCompatActivity() {
     }
 
     private fun initComponent() {
-        myButtons = mapOf(
+        myButtons = mapOf( // Inicializar los botones
             binding.number0 to "0",
             binding.number1 to "1",
             binding.number2 to "2",
@@ -75,9 +76,10 @@ class CalculadoraSimple : AppCompatActivity() {
     }
 
     private fun initListeners() {
+        // Asignar los listeners a los botones
         myButtons.forEach { (button, value) ->
             button.setOnClickListener {
-                if (resultadoCalculado) {
+                if (resultadoCalculado) { // Si se ha calculado un resultado, limpiar la pantalla
                     if (value in setOf("+", "-", "x", "/")) {
                         lista.add(value)
                         binding.mainEditText.append(value)
@@ -89,9 +91,10 @@ class CalculadoraSimple : AppCompatActivity() {
                     resultadoCalculado = false
                 } else {
                     if (value == ".") {
+                        // Verificar que no haya un punto al final de la lista
                         if (lista.isEmpty() || lista.last() == ".") {
                             Toast.makeText(this, "Operación inválida", Toast.LENGTH_SHORT).show()
-                            return@setOnClickListener
+                            return@setOnClickListener // Salir del listener
                         }
                     }
                     lista.add(value)
@@ -122,25 +125,26 @@ class CalculadoraSimple : AppCompatActivity() {
             startActivity(intent)
         }
 
+        // Mostrar un menú emergente al hacer clic en el botón de opciones
         binding.othersImageButton.setOnClickListener {
             val popupMenu = PopupMenu(this, it)
             popupMenu.menu.add(0, 1, 0, "Historial")
             popupMenu.menu.add(0, 2, 1, "Magnitudes")
             popupMenu.setOnMenuItemClickListener { menuItem ->
                 when (menuItem.itemId) {
-                    1 -> {
+                    1 -> { // Mostrar el historial
                         mostrarHistorial()
                         Toast.makeText(this, "Historial seleccionado", Toast.LENGTH_SHORT).show()
                         true
                     }
-                    2 -> {
+                    2 -> { // Mostrar las magnitudes
                         mostrarMagnitudes()
                         true
                     }
                     else -> false
                 }
             }
-            popupMenu.show()
+            popupMenu.show() // Mostrar el menú emergente
         }
 
         binding.ConversorTextView.setOnClickListener {
@@ -150,15 +154,17 @@ class CalculadoraSimple : AppCompatActivity() {
     }
 
     private fun mostrarMagnitudes() {
+        // Crear un diálogo con una lista de constantes matemáticas
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Magnitudes")
 
+        // Crear un ScrollView y un GridLayout para mostrar las constantes
         val scrollView = ScrollView(this)
         val layout = GridLayout(this)
         layout.rowCount = 5
         layout.columnCount = 2
 
-        val constants = listOf(
+        val constants = listOf( // Lista de constantes
             Triple("π (Pi)", "\u03C0", Math.PI),
             Triple("e (Número de Euler)", "e", Math.E),
             Triple("√2 (Raíz cuadrada de 2)", "√2", Math.sqrt(2.0)),
@@ -173,9 +179,12 @@ class CalculadoraSimple : AppCompatActivity() {
 
         lateinit var dialog: AlertDialog // Declarar la variable antes
 
+        // Crear un ImageView y un TextView para cada constante
         for ((name, symbol, value) in constants) {
             val imageView = ImageView(this)
-            imageView.setImageResource(getImageResourceByName(symbol))
+            imageView.setImageResource(getImageResourceByName(symbol)) // Obtener el recurso de imagen por nombre
+
+            // Establecer los parámetros de diseño para la imagen
             val paramsImage = GridLayout.LayoutParams()
             paramsImage.width = 200
             paramsImage.height = 200
@@ -191,6 +200,7 @@ class CalculadoraSimple : AppCompatActivity() {
             paramsText.setMargins(50, 100, 0, 0)
             textView.layoutParams = paramsText
 
+            // Listener para agregar la constante al texto principal
             val clickListener = {
                 val currentText = binding.mainEditText.text.toString()
                 if (currentText.toDoubleOrNull() != null) {
@@ -219,7 +229,7 @@ class CalculadoraSimple : AppCompatActivity() {
     }
 
 
-
+    // Obtener el recurso de imagen por nombre
     private fun getImageResourceByName(name: String): Int {
         return when (name) {
             "\u03C0" -> com.example.calculadora.R.drawable.pi_image
@@ -235,11 +245,13 @@ class CalculadoraSimple : AppCompatActivity() {
             else -> 0
         }
     }
+    // Mostrar el historial de cálculos
     private fun mostrarHistorial() {
         val db = dbHelper.readableDatabase
         val cursor = db.rawQuery("SELECT * FROM historial", null)
         val registros = ArrayList<String>()
 
+        // Recorrer los registros y añadirlos a la lista
         if (cursor.moveToFirst()) {
             do {
                 val operacion = cursor.getString(cursor.getColumnIndexOrThrow("operacion"))
@@ -254,6 +266,7 @@ class CalculadoraSimple : AppCompatActivity() {
         val builder = AlertDialog.Builder(this)
         builder.setTitle("Historial")
 
+        // Mostrar un mensaje si no hay registros
         if (registros.isEmpty()) {
             val textView = TextView(this)
             textView.text = "No hay registros todavía"
@@ -276,6 +289,7 @@ class CalculadoraSimple : AppCompatActivity() {
         builder.create().show()
     }
 
+    // Borrar el historial de cálculos
     private fun borrarHistorial() {
         val db = dbHelper.writableDatabase
         db.delete("historial", null, null)
@@ -292,6 +306,7 @@ class CalculadoraSimple : AppCompatActivity() {
 
         val resultado = calculo(lista)
 
+        // Guardar el cálculo en la base de datos
         val db = dbHelper.writableDatabase
         val values = ContentValues().apply {
             put("operacion", binding.mainEditText.text.toString())
@@ -317,16 +332,18 @@ class CalculadoraSimple : AppCompatActivity() {
     }
 
 
-    private fun deleteLast() {
+    // Métodos de interacción del usuario
+    private fun deleteLast() { // Eliminar el último elemento de la lista
         if (lista.isNotEmpty()) {
             lista.removeAt(lista.size - 1)
             binding.mainEditText.setText(lista.joinToString(""))
         }
     }
 
+    // Calcular el porcentaje
     private fun calculatePercentage() {
         if (lista.isNotEmpty() && lista.last().toDoubleOrNull() != null) {
-            val number = lista.joinToString("").toDouble()
+            val number = lista.joinToString("").toDouble() // Convertir la lista a un número
             val percentage = number / 100
             lista.clear()
             lista.add(percentage.toString())
@@ -350,6 +367,7 @@ class CalculadoraSimple : AppCompatActivity() {
         return roundIfDivision(numbers[0], lista, operators)
     }
 
+    // Métodos de lógica principal del cálculo
     private fun parseInput(
         lista: ArrayList<String>,
         operators: Set<String>,
@@ -359,11 +377,14 @@ class CalculadoraSimple : AppCompatActivity() {
         var number = ""
         var isNegative = false
 
+        // Recorrer la lista de entrada y separar los números y operadores
         for (item in lista) {
             if (item in operators) {
+                // Si el operador es un signo negativo y el número está vacío o el último operador es un operador
                 if (item == "-" && (number.isEmpty() || operations.isNotEmpty() && operations.last() in operators)) {
                     isNegative = true
                 } else {
+                    // Si el número no está vacío, añadirlo a la lista de números
                     if (number.isNotEmpty()) {
                         numbers.add(if (isNegative) -number.toDouble() else number.toDouble())
                         number = ""
@@ -376,27 +397,32 @@ class CalculadoraSimple : AppCompatActivity() {
             }
         }
 
+        // Añadir el último número a la lista
         if (number.isNotEmpty()) {
             numbers.add(if (isNegative) -number.toDouble() else number.toDouble())
         }
     }
 
+    // Métodos de lógica principal del cálculo
     private fun validateExpression(numbers: List<Double>, operations: List<String>) {
         if (numbers.size - 1 != operations.size) {
             Toast.makeText(this, "La expresión no es válida", Toast.LENGTH_LONG).show()
         }
     }
 
+    // Métodos de lógica principal del cálculo
     private fun performOperations(
         numbers: MutableList<Double>,
         operations: MutableList<String>,
         targetOperations: Set<String>
     ) {
+        // Realizar las operaciones de multiplicación, división, suma y resta
         var i = 0
         while (i < operations.size) {
             if (operations[i] in targetOperations) {
                 val result = when (operations[i]) {
                     "x" -> numbers[i] * numbers[i + 1]
+                    // Manejar la división por cero
                     "/" -> {
                         if (numbers[i + 1] == 0.0) {
                             Toast.makeText(this, "Error: División por cero", Toast.LENGTH_LONG).show()
@@ -417,6 +443,7 @@ class CalculadoraSimple : AppCompatActivity() {
         }
     }
 
+    // Métodos de para redondear el resultado
     private fun roundIfDivision(result: Double, lista: ArrayList<String>, operators: Set<String>): Double {
         val lastOperation = lista.lastOrNull { it in operators }
         return if (lastOperation == "/") {

@@ -8,17 +8,22 @@ import com.example.calculadora.databinding.ConversoresBinding
 
 class Conversores : AppCompatActivity() {
 
+    // ViewBinding
     private lateinit var conversoresBinding: ConversoresBinding
 
+    // Función que se ejecuta al crear la actividad
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // Inicializar ViewBinding
         conversoresBinding = ConversoresBinding.inflate(layoutInflater)
         setContentView(conversoresBinding.root)
 
         initListeners()
     }
 
+    // Función para inicializar los listeners de los botones
     private fun initListeners() {
+        // Listener para el botón de la calculadora
         conversoresBinding.CalculadoraTextView.setOnClickListener {
             val intent = Intent(this, CalculadoraSimple::class.java)
             startActivity(intent)
@@ -43,6 +48,7 @@ class Conversores : AppCompatActivity() {
             val intent = Intent(this, Tiempo::class.java)
             startActivity(intent)
         }
+
 
         conversoresBinding.datos.setOnClickListener {
             val intent = Intent(this, Datos::class.java)

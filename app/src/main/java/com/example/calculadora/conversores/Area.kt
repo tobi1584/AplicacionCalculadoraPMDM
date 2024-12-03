@@ -26,28 +26,36 @@ class Area : AppCompatActivity() {
     private lateinit var unidadDestinoEditText: EditText
     private lateinit var editTextActual: EditText
 
+    // Función que se ejecuta al crear la actividad
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.area)
 
+        // Inicializar las variables
         try {
+            // Obtener los elementos de la vista
             unidadOrigenEditText = findViewById(R.id.unidadOrigen)
             unidadDestinoEditText = findViewById(R.id.unidadDestino)
 
+            // Establecer el EditText actual
             editTextActual = unidadOrigenEditText
 
+            // Establecer el EditText actual al hacer clic en él
             unidadOrigenEditText.setOnFocusChangeListener { _, hasFocus ->
+                // Si el EditText tiene el foco, establecerlo como el EditText actual
                 if (hasFocus) {
                     editTextActual = unidadOrigenEditText
                 }
             }
 
+            // Establecer el EditText actual al hacer clic en él
             unidadDestinoEditText.setOnFocusChangeListener { _, hasFocus ->
                 if (hasFocus) {
                     editTextActual = unidadDestinoEditText
                 }
             }
 
+            // Obtener los elementos de la vista
             val optionsSpinner: Spinner = findViewById(R.id.spinner1)
             val selectedOptionTextView: TextView = findViewById(R.id.seleccion1)
             val optionsSpinner2: Spinner = findViewById(R.id.spinner2)
@@ -62,17 +70,24 @@ class Area : AppCompatActivity() {
             val adapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, options)
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
 
+            // Establecer el adaptador para los spinners
             optionsSpinner.adapter = adapter
+            // Establecer la selección inicial
             optionsSpinner.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                // Función que se ejecuta al seleccionar un elemento
                 override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                     selectedOptionTextView.text = options[position]
                     convertirYActualizar(unidadOrigenEditText, unidadDestinoEditText, optionsSpinner, optionsSpinner2)
                 }
+                // Función que se ejecuta al no seleccionar ningún elemento
                 override fun onNothingSelected(parent: AdapterView<*>) {}
             }
 
+            // Establecer el adaptador para los spinners
             optionsSpinner2.adapter = adapter
+            // Establecer la selección inicial
             optionsSpinner2.setSelection(options.indexOf("Metro cuadrado m2"))
+            // Función que se ejecuta al seleccionar un elemento
             optionsSpinner2.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onItemSelected(parent: AdapterView<*>, view: View, position: Int, id: Long) {
                     selectedOptionTextView2.text = options[position]
@@ -81,38 +96,49 @@ class Area : AppCompatActivity() {
                 override fun onNothingSelected(parent: AdapterView<*>) {}
             }
 
+            // Botón para regresar a la actividad anterior
             val backButton = findViewById<ImageButton>(R.id.backButton)
             backButton.setOnClickListener {
                 onBackPressed()
             }
 
+            // Establecer el valor inicial
             unidadOrigenEditText.setText("1")
             unidadOrigenEditText.setSelection(1)
 
+            // Función que se ejecuta al cambiar el texto del EditText
             unidadOrigenEditText.addTextChangedListener(object : TextWatcher {
+                // Función que se ejecuta al cambiar el texto
                 override fun afterTextChanged(s: Editable?) {
-                    if (actualizando) return
+                    if (actualizando) return // Si se está actualizando, no hacer nada
                     convertirYActualizar(unidadOrigenEditText, unidadDestinoEditText, findViewById(R.id.spinner1), findViewById(R.id.spinner2))
                 }
 
+                // Función que se ejecuta antes de cambiar el texto
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             })
 
 
+            // Función que se ejecuta al cambiar el texto del EditText
             unidadDestinoEditText.addTextChangedListener(object : TextWatcher {
                 override fun afterTextChanged(s: Editable?) {
                     if (actualizando) return
+                    // Convertir y actualizar el valor
                     convertirYActualizar(unidadDestinoEditText, unidadOrigenEditText, findViewById(R.id.spinner2), findViewById(R.id.spinner1))
                 }
 
+                // Función que se ejecuta antes de cambiar el texto
                 override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
                 override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
             })
 
+            // Función que se ejecuta al presionar una tecla
             val keyListener = View.OnKeyListener { v, keyCode, event ->
+                // Si se presiona la tecla Enter, convertir y actualizar el valor
                 if (event.action == KeyEvent.ACTION_DOWN && keyCode == KeyEvent.KEYCODE_ENTER) {
                     if (v.id == R.id.unidadOrigen) {
+                        // Convertir y actualizar el valor
                         convertirYActualizar(unidadOrigenEditText, unidadDestinoEditText, optionsSpinner, optionsSpinner2)
                     } else if (v.id == R.id.unidadDestino) {
                         convertirYActualizar(unidadDestinoEditText, unidadOrigenEditText, optionsSpinner2, optionsSpinner)
@@ -123,11 +149,14 @@ class Area : AppCompatActivity() {
                 }
             }
 
+            // Establecer el listener para los EditText
             unidadOrigenEditText.setOnKeyListener(keyListener)
             unidadDestinoEditText.setOnKeyListener(keyListener)
 
+            // Inicializar los botones
             initButtons()
 
+            // Botones para cambiar de actividad
             findViewById<Button>(R.id.ConversorTextView).setOnClickListener {
                 val intent = Intent(this, Conversores::class.java)
                 startActivity(intent)
@@ -142,6 +171,7 @@ class Area : AppCompatActivity() {
         }
     }
 
+    // Función que se ejecuta al presionar el botón de retroceso
     private fun convertirYActualizar(origen: EditText, destino: EditText, spinnerOrigen: Spinner, spinnerDestino: Spinner) {
         if (actualizando) return
         if (origen.text.isNullOrEmpty()) {
@@ -151,7 +181,9 @@ class Area : AppCompatActivity() {
             return
         }
 
+        // Convertir y actualizar el valor
         try {
+            // Convertir el valor
             val valor = origen.text.toString().toDoubleOrNull() ?: return
             val unidadOrigen = spinnerOrigen.selectedItem.toString()
             val unidadDestino = spinnerDestino.selectedItem.toString()
@@ -171,12 +203,10 @@ class Area : AppCompatActivity() {
     }
 
 
-
-
-
-
+    // Función para inicializar los botones
     private fun initButtons() {
         try {
+            // Obtener los botones de la vista
             myButtons = mapOf(
                 findViewById<Button>(R.id.number00) to "00",
                 findViewById<Button>(R.id.number0) to "0",
@@ -192,6 +222,7 @@ class Area : AppCompatActivity() {
                 findViewById<Button>(R.id.dotButton) to "."
             )
 
+            // Establecer el listener para los botones
             myButtons.forEach { (button, value) ->
                 button.setOnClickListener {
                     editTextActual.append(value)
@@ -203,11 +234,13 @@ class Area : AppCompatActivity() {
                 }
             }
 
+            // Botón para limpiar los EditText
             findViewById<Button>(R.id.cleanAllButton).setOnClickListener {
                 unidadOrigenEditText.text.clear()
                 unidadDestinoEditText.text.clear()
             }
 
+            // Botón para borrar el último carácter
             findViewById<ImageButton>(R.id.deleteButton).setOnClickListener {
                 val text = editTextActual.text
                 if (text.isNotEmpty()) {
@@ -220,6 +253,7 @@ class Area : AppCompatActivity() {
         }
     }
 
+    // Función para ajustar el tamaño del texto
     private fun ajustarTamañoTexto(editText: EditText, valor: String) {
         try {
             var tamañoLetra = 25f
@@ -248,6 +282,7 @@ class Area : AppCompatActivity() {
         }
     }
 
+    // Función para convertir una unidad a otra
     fun convertirUnidad(unidadOrigen: String, unidadDestino: String, valor: Double): Double {
         val conversionMedidas = mapOf(
             "Kilómetro cuadrado km2" to 1e6,
