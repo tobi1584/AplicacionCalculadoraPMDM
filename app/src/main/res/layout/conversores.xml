@@ -63,7 +63,7 @@
                 android:orientation="vertical">
 
                 <ImageButton
-                    android:id="@+id/longitudImageButton"
+                    android:id="@+id/longitud"
                     android:layout_width="50dp"
                     android:layout_height="30dp"
                     android:background="@color/backGroundColor"
@@ -89,6 +89,7 @@
                 android:orientation="vertical">
 
                 <ImageButton
+                    android:id="@+id/masa"
                     android:layout_width="35dp"
                     android:layout_height="30dp"
                     android:background="@color/backGroundColor"
@@ -115,7 +116,7 @@
                 android:orientation="vertical">
 
                 <ImageButton
-                    android:id="@+id/areaImageButton"
+                    android:id="@+id/area"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
                     android:background="@color/backGroundColor"
@@ -147,7 +148,7 @@
                 android:orientation="vertical">
 
                 <ImageButton
-                    android:id="@+id/tiempoImageButton"
+                    android:id="@+id/tiempo"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
                     android:background="@color/backGroundColor"
@@ -173,6 +174,7 @@
                 android:orientation="vertical">
 
                 <ImageButton
+                    android:id="@+id/datos"
                     android:layout_width="60dp"
                     android:layout_height="35dp"
                     android:background="@color/backGroundColor"
@@ -198,6 +200,7 @@
                 android:orientation="vertical">
 
                 <ImageButton
+                    android:id="@+id/descuento"
                     android:layout_width="45dp"
                     android:layout_height="40dp"
                     android:background="@color/backGroundColor"
@@ -229,6 +232,7 @@
                 android:orientation="vertical">
 
                 <ImageButton
+                    android:id="@+id/volumen"
                     android:layout_width="45dp"
                     android:layout_height="40dp"
                     android:background="@color/backGroundColor"
@@ -254,7 +258,7 @@
                 android:orientation="vertical">
 
                 <ImageButton
-                    android:id="@+id/sistemaNumeralImageButton"
+                    android:id="@+id/sistNum"
                     android:layout_width="45dp"
                     android:layout_height="38dp"
                     android:background="@color/backGroundColor"
@@ -281,6 +285,7 @@
                 android:orientation="vertical">
 
                 <ImageButton
+                    android:id="@+id/velocidad"
                     android:layout_width="70dp"
                     android:layout_height="40dp"
                     android:background="@color/backGroundColor"
@@ -312,7 +317,7 @@
                 android:orientation="vertical">
 
                 <ImageButton
-                    android:id="@+id/temperaturaImageButton"
+                    android:id="@+id/temperatura"
                     android:layout_width="45dp"
                     android:layout_height="38dp"
                     android:background="@color/backGroundColor"
@@ -338,6 +343,7 @@
                 android:orientation="vertical">
 
                 <ImageButton
+                    android:id="@+id/imc"
                     android:layout_width="40dp"
                     android:layout_height="35dp"
                     android:background="@color/backGroundColor"

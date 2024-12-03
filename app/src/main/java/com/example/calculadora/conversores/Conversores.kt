@@ -24,28 +24,58 @@ class Conversores : AppCompatActivity() {
             startActivity(intent)
         }
 
-        conversoresBinding.longitudImageButton.setOnClickListener {
+        conversoresBinding.longitud.setOnClickListener {
             val intent = Intent(this, Longitud::class.java)
             startActivity(intent)
         }
 
-        conversoresBinding.areaImageButton.setOnClickListener {
+        conversoresBinding.masa.setOnClickListener {
+            val intent = Intent(this, Masa::class.java)
+            startActivity(intent)
+        }
+
+        conversoresBinding.area.setOnClickListener {
             val intent = Intent(this, Area::class.java)
             startActivity(intent)
         }
 
-        conversoresBinding.tiempoImageButton.setOnClickListener {
+        conversoresBinding.tiempo.setOnClickListener {
             val intent = Intent(this, Tiempo::class.java)
             startActivity(intent)
         }
 
-        conversoresBinding.sistemaNumeralImageButton.setOnClickListener {
+        conversoresBinding.datos.setOnClickListener {
+            val intent = Intent(this, Datos::class.java)
+            startActivity(intent)
+        }
+
+        conversoresBinding.descuento.setOnClickListener {
+            val intent = Intent(this, Descuento::class.java)
+            startActivity(intent)
+        }
+
+        conversoresBinding.volumen.setOnClickListener {
+            val intent = Intent(this, Volumen::class.java)
+            startActivity(intent)
+        }
+
+        conversoresBinding.sistNum.setOnClickListener {
             val intent = Intent(this, SistemaNumeral::class.java)
             startActivity(intent)
         }
 
-        conversoresBinding.temperaturaImageButton.setOnClickListener {
+        conversoresBinding.velocidad.setOnClickListener {
+            val intent = Intent(this, Velocidad::class.java)
+            startActivity(intent)
+        }
+
+        conversoresBinding.temperatura.setOnClickListener {
             val intent = Intent(this, Temperatura::class.java)
+            startActivity(intent)
+        }
+
+        conversoresBinding.imc.setOnClickListener {
+            val intent = Intent(this, Imc::class.java)
             startActivity(intent)
         }
     }
