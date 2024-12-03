@@ -1,0 +1,131 @@
+<resources>
+    <string name="app_name">Calculadora</string>
+    <string name="number_0">0</string>
+    <string name="number_1">1</string>
+    <string name="number_2">2</string>
+    <string name="number_3">3</string>
+    <string name="number_4">4</string>
+    <string name="number_5">5</string>
+    <string name="number_6">6</string>
+    <string name="number_7">7</string>
+    <string name="number_8">8</string>
+    <string name="number_9">9</string>
+    <string name="plus">+</string>
+    <string name="minus">-</string>
+    <string name="multiply">x</string>
+    <string name="divide">/</string>
+    <string name="dot">.</string>
+    <string name="equals">=</string>
+    <string name="percent">%</string>
+    <string name="all_clean">AC</string>
+    <string name="delete">del</string>
+
+    <!-- Compleja -->
+    <string name="second">2nd</string>
+    <string name="deg">deg</string>
+    <string name="rad">rad</string>
+    <string name="sin">sin</string>
+    <string name="cos">cos</string>
+    <string name="tan">tan</string>
+
+    <string name="x_raised_y">x^y</string>
+    <string name="lg">lg</string>
+    <string name="ln">ln</string>
+    <string name="parent_open">(</string>
+    <string name="parent_close">)</string>
+
+    <string name="square_root">√x</string>
+
+    <string name="factorial">x!</string>
+
+    <string name="func_reci">1/x</string>
+
+    <string name="pi">π</string>
+
+    <string name="euler">e</string>
+    <string name="magnitudes">Magnitudes</string>
+
+    <!-- Convertidores -->
+    <string name="number_00">00</string>
+    <string name="clean">C</string>
+    <string name="divisas">Divisas</string>
+    <string name="longitud">Longitud</string>
+    <string name="masa">Masa</string>
+    <string name="area">Área</string>
+    <string name="tiempo">Tiempo</string>
+    <string name="datos">4</string>
+    <string name="descuento">5</string>
+    <string name="volumen">6</string>
+    <string name="sistema_numeral">7</string>
+    <string name="velocidad">8</string>
+    <string name="temperatura">9</string>
+    <string name="precio_final">Precio Final</string>
+    <string name="descuento_de_descuento">Descuento (%de descuento)</string>
+    <string name="precio_original">Precio original</string>
+    <string name="others">More options</string>
+    <string name="imc_resumen">Acerca del IMC\n\nEl índice de masa corporal (IMC) es el peso de una persona en kilogramos dividido por el cuadrado de la altura en metros. El IMC es un método de detección fácil para la categoría de peso.</string>
+    <string name="introducir_peso">Introducir peso</string>
+    <string name="peso_kg">Peso (kg)</string>
+    <string name="introducir_altura">Introducir altura</string>
+    <string name="altura_cm">Altura (cm)</string>
+    <string name="mujer">Mujer</string>
+    <string name="hombre">Hombre</string>
+    <string name="g_nero">Género</string>
+    <string name="introducir_edad">Introducir edad</string>
+    <string name="edad">Edad</string>
+    <string name="imc">IMC</string>
+    <string name="back">back</string>
+    <string name="descuento_title">Descuento</string>
+    <string name="masa_title">Masa</string>
+    <string name="velocidad_title">Velocidad\n</string>
+    <string name="datos_title">Datos\n</string>
+    <string name="Volumen_title">Volumen\n</string>
+    <string name="calcular">Calcular</string>
+    <string-array name="mass_units">
+        <item>Tonelada t</item>
+        <item>Kilogramo kg</item>
+        <item>Gramo g</item>
+        <item>Miligramo mg</item>
+        <item>Microgramo μg</item>
+        <item>Quintal q</item>
+        <item>Libra lb</item>
+        <item>Onza oz</item>
+        <item>Quilate ct</item>
+        <item>Grano gr</item>
+        <item>Tonelada larga l.t</item>
+        <item>Tonelada corta sh.t</item>
+        <item>Quintal ingles cwt</item>
+        <item>Quintal norteamericano cwt</item>
+    </string-array>
+    <string-array name="velocity_units">
+        <item>Kilómetro por hora km/h</item>
+        <item>Metro por segundo m/s</item>
+        <item>Milla por hora mph</item>
+        <item>Milla náutica nmi</item>
+        <item>Pie por segundo ft/s</item>
+        <item>Yarda por segundo yd/s</item>
+    </string-array>
+    <string-array name="data_units">
+        <item>Byte B</item>
+        <item>Kilobyte KB</item>
+        <item>Megabyte MB</item>
+        <item>Gigabyte GB</item>
+        <item>Terabyte TB</item>
+        <item>Petabyte PB</item>
+    </string-array>
+    <string-array name="volume_units">
+        <item>Metro cúbico m³</item>
+        <item>Decímetro cúbico dm³</item>
+        <item>Centímetro cúbico cm³</item>
+        <item>Milímetro cúbico mm³</item>
+        <item>Hectolitro hl</item>
+        <item>Litro l</item>
+        <item>Decilitro dl</item>
+        <item>Centilitro cl</item>
+        <item>Mililitro ml</item>
+        <item>Pie cúbico ft³</item>
+        <item>Pulgada cúbica in³</item>
+        <item>Yarda cúbica yd³</item>
+    </string-array>
+
+</resources>
