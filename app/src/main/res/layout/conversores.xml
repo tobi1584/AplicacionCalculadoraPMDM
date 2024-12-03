@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/backGroundColor"
     tools:context=".conversores.Conversores">
 
 <LinearLayout
@@ -65,7 +66,7 @@
                     android:id="@+id/longitudImageButton"
                     android:layout_width="50dp"
                     android:layout_height="30dp"
-                    android:background="@color/white"
+                    android:background="@color/backGroundColor"
                     android:scaleType="fitXY"
                     android:src="@drawable/icono_longitud"
                     tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
@@ -90,7 +91,7 @@
                 <ImageButton
                     android:layout_width="35dp"
                     android:layout_height="30dp"
-                    android:background="@color/white"
+                    android:background="@color/backGroundColor"
                     android:contentDescription="icono_masa"
                     android:scaleType="fitXY"
                     android:src="@drawable/icono_masa"
@@ -117,7 +118,7 @@
                     android:id="@+id/areaImageButton"
                     android:layout_width="30dp"
                     android:layout_height="30dp"
-                    android:background="@color/white"
+                    android:background="@color/backGroundColor"
                     android:scaleType="fitXY"
                     android:src="@drawable/icono_area"
                     tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
@@ -149,7 +150,7 @@
                     android:id="@+id/tiempoImageButton"
                     android:layout_width="35dp"
                     android:layout_height="35dp"
-                    android:background="@color/white"
+                    android:background="@color/backGroundColor"
                     android:scaleType="fitXY"
                     android:src="@drawable/icono_tiempo"
                     tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
@@ -174,7 +175,7 @@
                 <ImageButton
                     android:layout_width="60dp"
                     android:layout_height="35dp"
-                    android:background="@color/white"
+                    android:background="@color/backGroundColor"
                     android:scaleType="fitXY"
                     android:src="@drawable/icono_datos"
                     tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
@@ -199,7 +200,7 @@
                 <ImageButton
                     android:layout_width="45dp"
                     android:layout_height="40dp"
-                    android:background="@color/white"
+                    android:background="@color/backGroundColor"
                     android:scaleType="fitXY"
                     android:src="@drawable/icono_descuento"
                     tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
@@ -230,7 +231,7 @@
                 <ImageButton
                     android:layout_width="45dp"
                     android:layout_height="40dp"
-                    android:background="@color/white"
+                    android:background="@color/backGroundColor"
                     android:scaleType="fitXY"
                     android:src="@drawable/icono_volumen"
                     tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
@@ -254,9 +255,9 @@
 
                 <ImageButton
                     android:id="@+id/sistemaNumeralImageButton"
-                    android:layout_width="50dp"
-                    android:layout_height="35dp"
-                    android:background="@color/white"
+                    android:layout_width="45dp"
+                    android:layout_height="38dp"
+                    android:background="@color/backGroundColor"
                     android:contentDescription="@string/sistema_numeral"
                     android:scaleType="fitXY"
                     android:src="@drawable/icono_sisnumeral"
@@ -282,7 +283,7 @@
                 <ImageButton
                     android:layout_width="70dp"
                     android:layout_height="40dp"
-                    android:background="@color/white"
+                    android:background="@color/backGroundColor"
                     android:scaleType="fitXY"
                     android:src="@drawable/icono_velocidad"
                     tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
@@ -314,7 +315,7 @@
                     android:id="@+id/temperaturaImageButton"
                     android:layout_width="45dp"
                     android:layout_height="38dp"
-                    android:background="@color/white"
+                    android:background="@color/backGroundColor"
                     android:scaleType="fitXY"
                     android:src="@drawable/icono_temperatura"
                     tools:ignore="TouchTargetSizeCheck,SpeakableTextPresentCheck" />
@@ -338,8 +339,8 @@
 
                 <ImageButton
                     android:layout_width="40dp"
-                    android:layout_height="30dp"
-                    android:background="@color/white"
+                    android:layout_height="35dp"
+                    android:background="@color/backGroundColor"
                     android:scaleType="fitXY"
                     android:src="@drawable/icono_imc"
                     tools:ignore="TouchTargetSizeCheck" />
